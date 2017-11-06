@@ -47,7 +47,6 @@ int main(void)
 	
     while (1) 
     {		
-<<<<<<< HEAD
 		
 		//bprintf('a');
 		
@@ -61,7 +60,6 @@ int main(void)
 			
 			
 		
-=======
 		if(bReceive != 0)
 		{
 			bprintf(bReceive);
@@ -73,7 +71,6 @@ int main(void)
 			LCD_cmd(LCD_CLEAR);
 			bReceive=0;
 		}
->>>>>>> 5cd340369b21e328ce2b491afa665b3cb6d06015
     }
 }
 

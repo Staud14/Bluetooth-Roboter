@@ -19,15 +19,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   7 .debug_abbrev 00000e14  00000000  00000000  00001bc7  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000d2d  00000000  00000000  000029db  2**0
+  8 .debug_line   00000d4b  00000000  00000000  000029db  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000188  00000000  00000000  00003708  2**2
+  9 .debug_frame  00000188  00000000  00000000  00003728  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000006c1  00000000  00000000  00003890  2**0
+ 10 .debug_str    00000656  00000000  00000000  000038b0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000065a  00000000  00000000  00003f51  2**0
+ 11 .debug_loc    0000065a  00000000  00000000  00003f06  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000098  00000000  00000000  000045ab  2**0
+ 12 .debug_ranges 00000098  00000000  00000000  00004560  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -157,77 +157,123 @@ unsigned int bprintf(char trans)
  108:	08 95       	ret
 
 0000010a <drive>:
+
+void drive(unsigned char dir_motr, unsigned char pwm_rechts, unsigned char dir_motl, unsigned char pwm_links)
+{
+
+	// MOTOR RECHTS
+	if (dir_motr == 2)				//Motor rechts Stopp
  10a:	82 30       	cpi	r24, 0x02	; 2
  10c:	19 f4       	brne	.+6      	; 0x114 <drive+0xa>
+	{
+		OCR4B = 0;					//rechts PWM=0
  10e:	10 92 d0 00 	sts	0x00D0, r1	; 0x8000d0 <__TEXT_REGION_LENGTH__+0x7e00d0>
  112:	17 c0       	rjmp	.+46     	; 0x142 <drive+0x38>
+	}
+	else if (dir_motr == 1)			//rechts mit PWM vorwärts
  114:	81 30       	cpi	r24, 0x01	; 1
  116:	59 f4       	brne	.+22     	; 0x12e <drive+0x24>
+	{
+		if ((pwm_rechts>=PWM_R_STOPP)&&(pwm_rechts<PWM_R_VOR_MAX+1)) {OCR4B = pwm_rechts;}
  118:	82 ea       	ldi	r24, 0xA2	; 162
  11a:	86 0f       	add	r24, r22
  11c:	80 32       	cpi	r24, 0x20	; 32
  11e:	18 f4       	brcc	.+6      	; 0x126 <drive+0x1c>
  120:	60 93 d0 00 	sts	0x00D0, r22	; 0x8000d0 <__TEXT_REGION_LENGTH__+0x7e00d0>
  124:	0e c0       	rjmp	.+28     	; 0x142 <drive+0x38>
+		else {OCR4B = PWM_R_VOR_MAX;}			//vollgas rechts vor
  126:	8d e7       	ldi	r24, 0x7D	; 125
  128:	80 93 d0 00 	sts	0x00D0, r24	; 0x8000d0 <__TEXT_REGION_LENGTH__+0x7e00d0>
  12c:	0a c0       	rjmp	.+20     	; 0x142 <drive+0x38>
+	}
+	else
+	{
+		if ((pwm_rechts<=PWM_R_STOPP)&&(pwm_rechts>PWM_R_RET_MAX-1)) {OCR4B = pwm_rechts;}			//rechts mit PWM retour
  12e:	82 ec       	ldi	r24, 0xC2	; 194
  130:	86 0f       	add	r24, r22
  132:	81 32       	cpi	r24, 0x21	; 33
  134:	18 f4       	brcc	.+6      	; 0x13c <drive+0x32>
  136:	60 93 d0 00 	sts	0x00D0, r22	; 0x8000d0 <__TEXT_REGION_LENGTH__+0x7e00d0>
  13a:	03 c0       	rjmp	.+6      	; 0x142 <drive+0x38>
+		else {OCR4B = PWM_R_RET_MAX;}			//vollgas rechts retour
  13c:	8e e3       	ldi	r24, 0x3E	; 62
  13e:	80 93 d0 00 	sts	0x00D0, r24	; 0x8000d0 <__TEXT_REGION_LENGTH__+0x7e00d0>
+	}
+
+	// MOTOR LINKS
+	if (dir_motl == 2)				//Motor links Stopp
  142:	42 30       	cpi	r20, 0x02	; 2
  144:	19 f4       	brne	.+6      	; 0x14c <drive+0x42>
+	{
+		OCR4D = 0;					//links PWM=0
  146:	10 92 d2 00 	sts	0x00D2, r1	; 0x8000d2 <__TEXT_REGION_LENGTH__+0x7e00d2>
  14a:	08 95       	ret
+	}
+	else if (dir_motl == 1)			//links mit PWM vorwärts
  14c:	41 30       	cpi	r20, 0x01	; 1
  14e:	59 f4       	brne	.+22     	; 0x166 <drive+0x5c>
+	{
+		if ((pwm_links>PWM_L_VOR_MAX-1)&&(pwm_links<=PWM_L_STOPP)) {OCR4D = pwm_links;}
  150:	82 ec       	ldi	r24, 0xC2	; 194
  152:	82 0f       	add	r24, r18
  154:	81 32       	cpi	r24, 0x21	; 33
  156:	18 f4       	brcc	.+6      	; 0x15e <drive+0x54>
  158:	20 93 d2 00 	sts	0x00D2, r18	; 0x8000d2 <__TEXT_REGION_LENGTH__+0x7e00d2>
  15c:	08 95       	ret
+		else {OCR4D = PWM_L_VOR_MAX;}		//vollgas links  vor
  15e:	8e e3       	ldi	r24, 0x3E	; 62
  160:	80 93 d2 00 	sts	0x00D2, r24	; 0x8000d2 <__TEXT_REGION_LENGTH__+0x7e00d2>
  164:	08 95       	ret
+	}
+	else
+	{
+		if ((pwm_links>=PWM_L_STOPP)&&(pwm_links<PWM_L_RET_MAX+1)) {OCR4D = pwm_links;}	//links mit PWM retour
  166:	82 ea       	ldi	r24, 0xA2	; 162
  168:	82 0f       	add	r24, r18
  16a:	80 32       	cpi	r24, 0x20	; 32
  16c:	18 f4       	brcc	.+6      	; 0x174 <drive+0x6a>
  16e:	20 93 d2 00 	sts	0x00D2, r18	; 0x8000d2 <__TEXT_REGION_LENGTH__+0x7e00d2>
  172:	08 95       	ret
+		else {OCR4D = PWM_L_RET_MAX;}		//vollgas links retour
  174:	8d e7       	ldi	r24, 0x7D	; 125
  176:	80 93 d2 00 	sts	0x00D2, r24	; 0x8000d2 <__TEXT_REGION_LENGTH__+0x7e00d2>
  17a:	08 95       	ret
 
 0000017c <adc_measure>:
+
+unsigned int adc_measure(unsigned char channel)
+{
+	unsigned int result=0;
+
+	ADMUX &= ~(1<<REFS1)&~(1<<REFS0);			//ext. AREF = 5V
  17c:	ec e7       	ldi	r30, 0x7C	; 124
  17e:	f0 e0       	ldi	r31, 0x00	; 0
  180:	90 81       	ld	r25, Z
  182:	9f 73       	andi	r25, 0x3F	; 63
  184:	90 83       	st	Z, r25
+	ADMUX &= ~(1<<ADLAR);						//rechttsbündig
  186:	90 81       	ld	r25, Z
  188:	9f 7d       	andi	r25, 0xDF	; 223
  18a:	90 83       	st	Z, r25
+
+	ADCSRB &= ~(1<<MUX5);
  18c:	ab e7       	ldi	r26, 0x7B	; 123
  18e:	b0 e0       	ldi	r27, 0x00	; 0
  190:	9c 91       	ld	r25, X
  192:	9f 7d       	andi	r25, 0xDF	; 223
  194:	9c 93       	st	X, r25
+	ADMUX &= ~(1<<MUX4)&~(1<<MUX3);
  196:	90 81       	ld	r25, Z
  198:	97 7e       	andi	r25, 0xE7	; 231
  19a:	90 83       	st	Z, r25
+	if (channel == 0) {ADMUX &= ~(1<<MUX2)&~(1<<MUX1)&~(1<<MUX0);}			//ADC0 single ended Messung Measure UB
  19c:	81 11       	cpse	r24, r1
  19e:	04 c0       	rjmp	.+8      	; 0x1a8 <adc_measure+0x2c>
  1a0:	80 81       	ld	r24, Z
  1a2:	88 7f       	andi	r24, 0xF8	; 248
  1a4:	80 83       	st	Z, r24
  1a6:	15 c0       	rjmp	.+42     	; 0x1d2 <adc_measure+0x56>
+	if (channel == 1) {ADMUX &= ~(1<<MUX2)&~(1<<MUX1);ADMUX |= (1<<MUX0);}	//ADC1 single ended Messung LF left  (IR Empfänger links)
  1a8:	81 30       	cpi	r24, 0x01	; 1
  1aa:	49 f4       	brne	.+18     	; 0x1be <adc_measure+0x42>
  1ac:	ec e7       	ldi	r30, 0x7C	; 124
@@ -239,6 +285,7 @@ unsigned int bprintf(char trans)
  1b8:	81 60       	ori	r24, 0x01	; 1
  1ba:	80 83       	st	Z, r24
  1bc:	0a c0       	rjmp	.+20     	; 0x1d2 <adc_measure+0x56>
+	if (channel == 4) {ADMUX |=  (1<<MUX2);ADMUX &= ~(1<<MUX1)&~(1<<MUX0);}	//ADC4 single ended Messung LF right (IR Empfänger rechts)
  1be:	84 30       	cpi	r24, 0x04	; 4
  1c0:	41 f4       	brne	.+16     	; 0x1d2 <adc_measure+0x56>
  1c2:	ec e7       	ldi	r30, 0x7C	; 124
@@ -249,58 +296,87 @@ unsigned int bprintf(char trans)
  1cc:	80 81       	ld	r24, Z
  1ce:	8c 7f       	andi	r24, 0xFC	; 252
  1d0:	80 83       	st	Z, r24
+
+	ADCSRA |= (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);	//ADC einschalten, Teiler auf 128 -> 125kHz Samplingfrequenz
  1d2:	ea e7       	ldi	r30, 0x7A	; 122
  1d4:	f0 e0       	ldi	r31, 0x00	; 0
  1d6:	80 81       	ld	r24, Z
  1d8:	87 68       	ori	r24, 0x87	; 135
  1da:	80 83       	st	Z, r24
+
+	ADCSRA |= (1<<ADSC);						//start
  1dc:	80 81       	ld	r24, Z
  1de:	80 64       	ori	r24, 0x40	; 64
  1e0:	80 83       	st	Z, r24
+	while(ADCSRA&(1<<ADSC));					//warten auf Wandlungsende
  1e2:	80 81       	ld	r24, Z
  1e4:	86 fd       	sbrc	r24, 6
  1e6:	fd cf       	rjmp	.-6      	; 0x1e2 <adc_measure+0x66>
+	result = ADCW;
  1e8:	80 91 78 00 	lds	r24, 0x0078	; 0x800078 <__TEXT_REGION_LENGTH__+0x7e0078>
  1ec:	90 91 79 00 	lds	r25, 0x0079	; 0x800079 <__TEXT_REGION_LENGTH__+0x7e0079>
+	return result;
+}
  1f0:	08 95       	ret
 
 000001f2 <akkuzustand>:
+
+
+void akkuzustand (void)
+{
  1f2:	cf 93       	push	r28
  1f4:	ca e0       	ldi	r28, 0x0A	; 10
+	unsigned int akku;
+	unsigned char i;
+	
+	for (i=0;i<10;i++) {akku = adc_measure(MEASURE_UB);}
  1f6:	80 e0       	ldi	r24, 0x00	; 0
  1f8:	0e 94 be 00 	call	0x17c	; 0x17c <adc_measure>
  1fc:	c1 50       	subi	r28, 0x01	; 1
  1fe:	d9 f7       	brne	.-10     	; 0x1f6 <akkuzustand+0x4>
+	if (akku >822)										//Akku voll,	 7,2V >= Vcc > 6,8V  grün
  200:	87 33       	cpi	r24, 0x37	; 55
  202:	23 e0       	ldi	r18, 0x03	; 3
  204:	92 07       	cpc	r25, r18
  206:	10 f0       	brcs	.+4      	; 0x20c <akkuzustand+0x1a>
+	{PORTB|=(1<<LED_GRUEN); PORTB&=~(1<<LED_ROT);}
  208:	2c 9a       	sbi	0x05, 4	; 5
  20a:	2d 98       	cbi	0x05, 5	; 5
+	if ((akku<=822)&&(akku>744))						//Akku halbvoll, 6,8V >= Vcc > 6,4V  gelb
  20c:	9c 01       	movw	r18, r24
  20e:	29 5e       	subi	r18, 0xE9	; 233
  210:	32 40       	sbci	r19, 0x02	; 2
  212:	2e 34       	cpi	r18, 0x4E	; 78
  214:	31 05       	cpc	r19, r1
  216:	10 f4       	brcc	.+4      	; 0x21c <akkuzustand+0x2a>
+	{PORTB|=(1<<LED_GRUEN); PORTB|=(1<<LED_ROT);}
  218:	2c 9a       	sbi	0x05, 4	; 5
  21a:	2d 9a       	sbi	0x05, 5	; 5
+	if (akku<=744)										//Akku leer,	 6,4V >= Vcc		 rot +  ENDE
  21c:	89 3e       	cpi	r24, 0xE9	; 233
  21e:	92 40       	sbci	r25, 0x02	; 2
  220:	d8 f4       	brcc	.+54     	; 0x258 <akkuzustand+0x66>
+	{PORTB&=~(1<<LED_GRUEN); PORTB|=(1<<LED_ROT);
  222:	2c 98       	cbi	0x05, 4	; 5
  224:	2d 9a       	sbi	0x05, 5	; 5
+		cli();										//alle Interrupts aus
  226:	f8 94       	cli
+		TCCR4B &= 0xF0;							//alle Motoren stopp, Motor PWM aus
  228:	e1 ec       	ldi	r30, 0xC1	; 193
  22a:	f0 e0       	ldi	r31, 0x00	; 0
  22c:	80 81       	ld	r24, Z
  22e:	80 7f       	andi	r24, 0xF0	; 240
  230:	80 83       	st	Z, r24
+		PORTB  &= 0x30;							//alle LEDs am Ring aus, Beeper und Motor right aus
  232:	85 b1       	in	r24, 0x05	; 5
  234:	80 73       	andi	r24, 0x30	; 48
  236:	85 b9       	out	0x05, r24	; 5
+		PORTD  =  0x08;							//Motor left und alle IR-Sender aus
  238:	88 e0       	ldi	r24, 0x08	; 8
  23a:	8b b9       	out	0x0b, r24	; 11
+		while(1)
+		{
+			PORTB^=(1<<LED_ROT);				//rote Duo LED blinkt in Endlsschleife = E N D E !!!!
  23c:	90 e2       	ldi	r25, 0x20	; 32
  23e:	85 b1       	in	r24, 0x05	; 5
  240:	89 27       	eor	r24, r25
@@ -321,87 +397,148 @@ unsigned int bprintf(char trans)
  252:	00 c0       	rjmp	.+0      	; 0x254 <akkuzustand+0x62>
  254:	00 00       	nop
  256:	f3 cf       	rjmp	.-26     	; 0x23e <akkuzustand+0x4c>
+			_delay_ms(150);
+		}
+	}
+}
  258:	cf 91       	pop	r28
  25a:	08 95       	ret
 
 0000025c <roboter_init>:
+
+
+void roboter_init(void)
+{	
  25c:	cf 93       	push	r28
  25e:	df 93       	push	r29
+	CLKPR = 0x80;
  260:	e1 e6       	ldi	r30, 0x61	; 97
  262:	f0 e0       	ldi	r31, 0x00	; 0
  264:	80 e8       	ldi	r24, 0x80	; 128
  266:	80 83       	st	Z, r24
+	CLKPR = 0x00;						//CLK_IO = f_quarz = 16 MHz, Teiler 1
  268:	10 82       	st	Z, r1
+	
+
+	//LED Pins
+	DDRB = DDRB |(1<<DDB0)|(1<<DDB1)|(1<<DDB2)|(1<<DDB3);	//LED Pins
  26a:	84 b1       	in	r24, 0x04	; 4
  26c:	8f 60       	ori	r24, 0x0F	; 15
  26e:	84 b9       	out	0x04, r24	; 4
+	//DDRD = DDRD |(1<<DDD2)|(1<<DDD3);						//Duo LED Pins		//Disabled for Bluetooth
+
+
+	//Akkuspannung
+	DDRF = DDRF &~(1<<MEASURE_UB);		//ADC0	PF0
  270:	80 98       	cbi	0x10, 0	; 16
+
+	//Motoren Pins
+	DDRB = DDRB | (1<<DDB6);			//PWM-Output OC4B für MOTOR_RECHTS
  272:	26 9a       	sbi	0x04, 6	; 4
+	DDRD = DDRD | (1<<DDD7);			//PWM-Output OC4D für MOTOR_LINKS
  274:	57 9a       	sbi	0x0a, 7	; 10
+
+	//Timer 4 im Fast PWM Mode konfigurieren
+	TCCR4A = TCCR4A | (1<<PWM4B);
  276:	a0 ec       	ldi	r26, 0xC0	; 192
  278:	b0 e0       	ldi	r27, 0x00	; 0
  27a:	8c 91       	ld	r24, X
  27c:	81 60       	ori	r24, 0x01	; 1
  27e:	8c 93       	st	X, r24
+	TCCR4C = TCCR4C | (1<<PWM4D);
  280:	e2 ec       	ldi	r30, 0xC2	; 194
  282:	f0 e0       	ldi	r31, 0x00	; 0
  284:	80 81       	ld	r24, Z
  286:	81 60       	ori	r24, 0x01	; 1
  288:	80 83       	st	Z, r24
+	TCCR4D = TCCR4D &~(1<<WGM41);
  28a:	c3 ec       	ldi	r28, 0xC3	; 195
  28c:	d0 e0       	ldi	r29, 0x00	; 0
  28e:	88 81       	ld	r24, Y
  290:	8d 7f       	andi	r24, 0xFD	; 253
  292:	88 83       	st	Y, r24
+	TCCR4D = TCCR4D &~(1<<WGM40);		//Fast PWM am OC4B und OC4D
  294:	88 81       	ld	r24, Y
  296:	8e 7f       	andi	r24, 0xFE	; 254
  298:	88 83       	st	Y, r24
+
+	TCCR4A = TCCR4A &~(1<<COM4B0);
  29a:	8c 91       	ld	r24, X
  29c:	8f 7e       	andi	r24, 0xEF	; 239
  29e:	8c 93       	st	X, r24
+	TCCR4A = TCCR4A | (1<<COM4B1);		//COM4B1:0=2
  2a0:	8c 91       	ld	r24, X
  2a2:	80 62       	ori	r24, 0x20	; 32
  2a4:	8c 93       	st	X, r24
+
+	TCCR4C = TCCR4C &~(1<<COM4D0);
  2a6:	80 81       	ld	r24, Z
  2a8:	8b 7f       	andi	r24, 0xFB	; 251
  2aa:	80 83       	st	Z, r24
+	TCCR4C = TCCR4C | (1<<COM4D1);		//COM4D1:0=2
  2ac:	80 81       	ld	r24, Z
  2ae:	88 60       	ori	r24, 0x08	; 8
  2b0:	80 83       	st	Z, r24
+
+	TC4H = 0x03;
  2b2:	ef eb       	ldi	r30, 0xBF	; 191
  2b4:	f0 e0       	ldi	r31, 0x00	; 0
  2b6:	83 e0       	ldi	r24, 0x03	; 3
  2b8:	80 83       	st	Z, r24
+	OCR4C = 0xE8;						//f_PWM = f_CLK_T4/(1+OCR4C) = 62,5kHz/1000 = 62,5 Hz
  2ba:	88 ee       	ldi	r24, 0xE8	; 232
  2bc:	80 93 d1 00 	sts	0x00D1, r24	; 0x8000d1 <__TEXT_REGION_LENGTH__+0x7e00d1>
+	TC4H = 0x00;
  2c0:	10 82       	st	Z, r1
+	OCR4B = 94;							//Tastverhältnis am OC4B-Pin (PB6), PWM_rechts (retour_max = 62, vor_max = 125, stopp = 94)
  2c2:	8e e5       	ldi	r24, 0x5E	; 94
  2c4:	80 93 d0 00 	sts	0x00D0, r24	; 0x8000d0 <__TEXT_REGION_LENGTH__+0x7e00d0>
+	OCR4D = 94;							//Tastverhältnis am OC4D-Pin (PD7), PWM_links  (retour_max = 62, vor_max = 125, stopp = 94)
  2c8:	80 93 d2 00 	sts	0x00D2, r24	; 0x8000d2 <__TEXT_REGION_LENGTH__+0x7e00d2>
+
+
+	TCCR4B = TCCR4B | (1<<CS43);
  2cc:	e1 ec       	ldi	r30, 0xC1	; 193
  2ce:	f0 e0       	ldi	r31, 0x00	; 0
  2d0:	80 81       	ld	r24, Z
  2d2:	88 60       	ori	r24, 0x08	; 8
  2d4:	80 83       	st	Z, r24
+	TCCR4B = TCCR4B &~(1<<CS42);
  2d6:	80 81       	ld	r24, Z
  2d8:	8b 7f       	andi	r24, 0xFB	; 251
  2da:	80 83       	st	Z, r24
+	TCCR4B = TCCR4B &~(1<<CS41);		//f_CLK_T4 = CLK_IO/Prescaler = 16MHz/256 = 62,5kHz
  2dc:	80 81       	ld	r24, Z
  2de:	8d 7f       	andi	r24, 0xFD	; 253
  2e0:	80 83       	st	Z, r24
+	TCCR4B = TCCR4B | (1<<CS40);		//Timer4 Prescaler = 1, Start PWM
  2e2:	80 81       	ld	r24, Z
  2e4:	81 60       	ori	r24, 0x01	; 1
  2e6:	80 83       	st	Z, r24
+
+
+	
+	akkuzustand();						//ein paar mal messen damit ADC warm läuft
  2e8:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <akkuzustand>
+	akkuzustand();
  2ec:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <akkuzustand>
+	akkuzustand();
  2f0:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <akkuzustand>
+	akkuzustand();
  2f4:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <akkuzustand>
+	akkuzustand();
  2f8:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <akkuzustand>
  2fc:	df 91       	pop	r29
  2fe:	cf 91       	pop	r28
  300:	08 95       	ret
 
 00000302 <write_i2c>:
+
+void LCD_string(char *data)
+{
+	while (*data != '\0')				//bis zum letzten Zeichen
+	{LCD_data(*data++);}
+}
  302:	ef e3       	ldi	r30, 0x3F	; 63
  304:	ff e1       	ldi	r31, 0x1F	; 31
  306:	31 97       	sbiw	r30, 0x01	; 1
@@ -637,77 +774,118 @@ unsigned int bprintf(char trans)
  4fa:	08 95       	ret
 
 000004fc <I2C_init>:
+	//
+	////////////////////////////////////////////////////////////////////////////
+
+	///////////////// IOCON konfigurieren ///////////////////
+	
+	TWCR = TWCR|(1<<TWINT)|(1<<TWSTA)|(1<<TWEN);		//START
  4fc:	ec eb       	ldi	r30, 0xBC	; 188
  4fe:	f0 e0       	ldi	r31, 0x00	; 0
  500:	80 81       	ld	r24, Z
  502:	84 6a       	ori	r24, 0xA4	; 164
  504:	80 83       	st	Z, r24
+	while(!(TWCR&(1<<TWINT)));							//warten bis fertig
  506:	80 81       	ld	r24, Z
  508:	88 23       	and	r24, r24
  50a:	ec f7       	brge	.-6      	; 0x506 <I2C_init+0xa>
+
+	TWDR = 0b01000000;									//Adr. 0100 000W + Write (W=0)
  50c:	80 e4       	ldi	r24, 0x40	; 64
  50e:	80 93 bb 00 	sts	0x00BB, r24	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7e00bb>
+	TWCR = (1<<TWINT)|(1<<TWEN);						//senden
  512:	84 e8       	ldi	r24, 0x84	; 132
  514:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
+	while(!(TWCR&(1<<TWINT)));							//warten bis fertig
  518:	ec eb       	ldi	r30, 0xBC	; 188
  51a:	f0 e0       	ldi	r31, 0x00	; 0
  51c:	80 81       	ld	r24, Z
  51e:	88 23       	and	r24, r24
  520:	ec f7       	brge	.-6      	; 0x51c <I2C_init+0x20>
+
+	TWDR = 0x05;										//Registeradr. IOCON schicken
  522:	85 e0       	ldi	r24, 0x05	; 5
  524:	80 93 bb 00 	sts	0x00BB, r24	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7e00bb>
+	TWCR = (1<<TWINT)|(1<<TWEN);						//Registeradr. senden
  528:	84 e8       	ldi	r24, 0x84	; 132
  52a:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
+	while(!(TWCR&(1<<TWINT)));							//warten bis fertig
  52e:	ec eb       	ldi	r30, 0xBC	; 188
  530:	f0 e0       	ldi	r31, 0x00	; 0
  532:	80 81       	ld	r24, Z
  534:	88 23       	and	r24, r24
  536:	ec f7       	brge	.-6      	; 0x532 <I2C_init+0x36>
+	
+	TWDR = 0x2A;										//IOCON konfigurieren: Byte Mode, Slew Rate enable, kein Open Drain bei INTn, INTn actice-high
  538:	8a e2       	ldi	r24, 0x2A	; 42
  53a:	80 93 bb 00 	sts	0x00BB, r24	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7e00bb>
+	TWCR = (1<<TWINT)|(1<<TWEN);						//Konf. senden
  53e:	84 e8       	ldi	r24, 0x84	; 132
  540:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
+	while(!(TWCR&(1<<TWINT)));							//warten bis fertig
  544:	ec eb       	ldi	r30, 0xBC	; 188
  546:	f0 e0       	ldi	r31, 0x00	; 0
  548:	80 81       	ld	r24, Z
  54a:	88 23       	and	r24, r24
  54c:	ec f7       	brge	.-6      	; 0x548 <I2C_init+0x4c>
+	
+	TWCR = TWCR|(1<<TWINT)|(1<<TWSTO)|(1<<TWEN);		//STOP
  54e:	ec eb       	ldi	r30, 0xBC	; 188
  550:	f0 e0       	ldi	r31, 0x00	; 0
  552:	80 81       	ld	r24, Z
  554:	84 69       	ori	r24, 0x94	; 148
  556:	80 83       	st	Z, r24
+	
+
+	///////////////// GP mit IODIR als OUTPUT konfigurieren ///////////////////
+	
+	TWCR = TWCR|(1<<TWINT)|(1<<TWSTA)|(1<<TWEN);		//START
  558:	80 81       	ld	r24, Z
  55a:	84 6a       	ori	r24, 0xA4	; 164
  55c:	80 83       	st	Z, r24
+	while(!(TWCR&(1<<TWINT)));							//warten bis fertig
  55e:	80 81       	ld	r24, Z
  560:	88 23       	and	r24, r24
  562:	ec f7       	brge	.-6      	; 0x55e <I2C_init+0x62>
+
+	TWDR = 0b01000000;									//Adr. 0100 000W + Write (W=0)
  564:	80 e4       	ldi	r24, 0x40	; 64
  566:	80 93 bb 00 	sts	0x00BB, r24	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7e00bb>
+	TWCR = (1<<TWINT)|(1<<TWEN);						//senden
  56a:	84 e8       	ldi	r24, 0x84	; 132
  56c:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
+	while(!(TWCR&(1<<TWINT)));							//warten bis fertig
  570:	ec eb       	ldi	r30, 0xBC	; 188
  572:	f0 e0       	ldi	r31, 0x00	; 0
  574:	80 81       	ld	r24, Z
  576:	88 23       	and	r24, r24
  578:	ec f7       	brge	.-6      	; 0x574 <I2C_init+0x78>
+
+	TWDR = 0x00;										//Registeradr. IODIR schicken
  57a:	10 92 bb 00 	sts	0x00BB, r1	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7e00bb>
+	TWCR = (1<<TWINT)|(1<<TWEN);						//Registeradr. senden
  57e:	84 e8       	ldi	r24, 0x84	; 132
  580:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
+	while(!(TWCR&(1<<TWINT)));							//warten bis fertig
  584:	ec eb       	ldi	r30, 0xBC	; 188
  586:	f0 e0       	ldi	r31, 0x00	; 0
  588:	80 81       	ld	r24, Z
  58a:	88 23       	and	r24, r24
  58c:	ec f7       	brge	.-6      	; 0x588 <I2C_init+0x8c>
+	
+	TWDR = 0x00;										//IODIR konfigurieren, alle Pins als OUTPUT
  58e:	10 92 bb 00 	sts	0x00BB, r1	; 0x8000bb <__TEXT_REGION_LENGTH__+0x7e00bb>
+	TWCR = (1<<TWINT)|(1<<TWEN);						//Konf. senden
  592:	84 e8       	ldi	r24, 0x84	; 132
  594:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
+	while(!(TWCR&(1<<TWINT)));							//warten bis fertig
  598:	ec eb       	ldi	r30, 0xBC	; 188
  59a:	f0 e0       	ldi	r31, 0x00	; 0
  59c:	80 81       	ld	r24, Z
  59e:	88 23       	and	r24, r24
  5a0:	ec f7       	brge	.-6      	; 0x59c <I2C_init+0xa0>
+	
+	TWCR = TWCR|(1<<TWINT)|(1<<TWSTO)|(1<<TWEN);		//STOP
  5a2:	ec eb       	ldi	r30, 0xBC	; 188
  5a4:	f0 e0       	ldi	r31, 0x00	; 0
  5a6:	80 81       	ld	r24, Z
