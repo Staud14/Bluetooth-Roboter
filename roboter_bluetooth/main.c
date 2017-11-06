@@ -44,8 +44,24 @@ int main(void)
 	_delay_ms(1000);
 	LCD_cmd(LCD_CLEAR);
 	
+	
     while (1) 
     {		
+<<<<<<< HEAD
+		
+		//bprintf('a');
+		
+		
+			LCD_data(bReceive);	
+			
+			bprintf(bReceive);
+			
+			bReceive=0;
+			
+			
+			
+		
+=======
 		if(bReceive != 0)
 		{
 			bprintf(bReceive);
@@ -57,6 +73,7 @@ int main(void)
 			LCD_cmd(LCD_CLEAR);
 			bReceive=0;
 		}
+>>>>>>> 5cd340369b21e328ce2b491afa665b3cb6d06015
     }
 }
 
