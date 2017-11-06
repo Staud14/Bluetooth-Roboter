@@ -42,8 +42,6 @@ int main(void)
 	
 	
     while (1) 
-    {		
-		
     {				
 		//bprintf('a');
 		
@@ -67,7 +65,6 @@ int main(void)
 			bReceive=0;
 		}
     }
-	}
 }
 
 
