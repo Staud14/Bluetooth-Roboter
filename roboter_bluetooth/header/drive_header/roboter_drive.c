@@ -7,9 +7,10 @@
 #define F_CPU 16000000UL
 
 #include <avr/io.h>
-#include <util/delay.h>
 #include <avr/interrupt.h>
 #include "roboter_drive.h"
+
+long int counter_timer = 0;
 
 
 void drive(unsigned char dir_motr, unsigned char pwm_rechts, unsigned char dir_motl, unsigned char pwm_links)
@@ -138,6 +139,14 @@ void roboter_init(void)
 	TCCR4B = TCCR4B &~(1<<CS42);
 	TCCR4B = TCCR4B &~(1<<CS41);		//f_CLK_T4 = CLK_IO/Prescaler = 16MHz/256 = 62,5kHz
 	TCCR4B = TCCR4B | (1<<CS40);		//Timer4 Prescaler = 1, Start PWM
+	
+	
+	//Timer 0 for _delay_ms and _delay_us
+	
+	TCCR0A = 0x00;
+	TCCR0B |= (1<<CS01);
+	TCNT0 = PRELOAD_TIMER0;
+	TIMSK0 |= (1 << TOIE0);
 
 
 	
@@ -146,4 +155,27 @@ void roboter_init(void)
 	akkuzustand();
 	akkuzustand();
 	akkuzustand();
+}
+
+void _delay_ms(long int _ms)
+{
+	while(counter_timer != (_ms*1000));
+}
+
+void _delay_us(long int _us)
+{
+	while(counter_timer != _us);
+}
+
+
+ISR(TIMER0_OVF_vect)												//Interrrupt sub routine timer 0 (8bit Timer)
+{
+	TCNT0 = PRELOAD_TIMER0;
+	
+	counter_timer++;
+	if (counter_timer > 4294967290)
+	{
+		counter_timer = 4294967290;
+	}
+	
 }

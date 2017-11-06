@@ -146,7 +146,7 @@
     <Folder Include="header" />
     <Folder Include="header\bluetooth_header" />
     <Folder Include="header\drive_header" />
-    <Folder Include="header\I2C_header" />
+    <Folder Include="header\I2C_header\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

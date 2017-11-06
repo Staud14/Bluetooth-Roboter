@@ -36,7 +36,7 @@ SUBDIRS :=  \
 ../header \
 ../header/bluetooth_header \
 ../header/drive_header \
-../header/I2C_header
+../header/I2C_header/
 
 
 # Add inputs and outputs from these tool invocations to the build variables 

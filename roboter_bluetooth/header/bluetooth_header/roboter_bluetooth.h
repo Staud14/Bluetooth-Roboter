@@ -22,8 +22,8 @@
 *     ---   ---
 *
 *	 <J4>  <J3
-*	 ------------					(1|2) ... uC RX (PD2) -> TX Bluetooth module... red cable
-*	|. . . . . . |					(1|5) ... uC TX (PD3)-> RX Bluetooth module... brown cable
+*	 ------------					(1|3) ... uC RX (PD2) -> TX Bluetooth module... red cable
+*	|. . . . . . |					(1|6) ... uC TX (PD3)-> RX Bluetooth module... brown cable
 *	 ------------
 *		<--- USB connector
 *
