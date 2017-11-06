@@ -1,2 +1,13 @@
-
 .vs/roboter_bluetooth/v14/.atsuo
+
+roboter_bluetooth/roboter_bluetooth/roboter_bluetooth.componentinfo
+# Compiled C files
+*.o
+*.hex
+*.elf
+*.fuse
+*.lock
+*.lss
+*.map
+*.sig
+*.srec
