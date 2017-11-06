@@ -45,12 +45,11 @@ int main(void)
     {				
 		//bprintf('a');
 		
+		LCD_data(bReceive);		
 		
-			LCD_data(bReceive);	
+		bprintf(bReceive);
 			
-			bprintf(bReceive);
-			
-			bReceive=0;			
+		bReceive=0;			
 			
 		
 		if(bReceive != 0)
