@@ -44,17 +44,22 @@ int main(void)
 	_delay_ms(1000);
 	LCD_cmd(LCD_CLEAR);
 	
+	
     while (1) 
     {		
-		if(bReceive != 0)
-		{
-			LCD_data(bReceive);
-			_delay_ms(10000);
-			LCD_cmd(LCD_CLEAR);
-			LCD_data(bscanf());
-			_delay_ms(10000);
-			LCD_cmd(LCD_CLEAR);
-		}
+		
+		//bprintf('a');
+		
+		
+			LCD_data(bReceive);	
+			
+			bprintf(bReceive);
+			
+			bReceive=0;
+			
+			
+			
+		
     }
 }
 
