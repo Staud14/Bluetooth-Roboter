@@ -11,9 +11,7 @@ header/I2C_header/roboter_I2C.d header/I2C_header/roboter_I2C.o: \
  f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\version.h \
  f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\fuse.h \
  f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
- f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h \
- f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
- f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
+ ../header/I2C_header/../drive_header/roboter_drive.h \
  ../header/I2C_header/roboter_I2C.h
 
 f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
@@ -38,10 +36,6 @@ f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\includ
 
 f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h:
 
-f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h:
-
-f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h:
-
-f:\programms\atmel\ studio\ 7.0\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h:
+../header/I2C_header/../drive_header/roboter_drive.h:
 
 ../header/I2C_header/roboter_I2C.h:

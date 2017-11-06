@@ -10,7 +10,6 @@
 #include <avr/io.h>
 #include <string.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
 
 #include "header/bluetooth_header/roboter_bluetooth.h"
 #include "header/drive_header/roboter_drive.h"
@@ -40,15 +39,10 @@ int main(void)
 	
 	drive(MOT_FAST_STOPP, PWM_R_STOPP, MOT_FAST_STOPP, PWM_L_STOPP);
 	
-	LCD_data( 'x' );
-	_delay_ms(1000);
-	LCD_cmd(LCD_CLEAR);
 	
 	
     while (1) 
-    {		
-<<<<<<< HEAD
-		
+    {				
 		//bprintf('a');
 		
 		
@@ -56,25 +50,9 @@ int main(void)
 			
 			bprintf(bReceive);
 			
-			bReceive=0;
+			bReceive=0;			
 			
-			
-			
-		
-=======
-		if(bReceive != 0)
-		{
-			bprintf(bReceive);
-			LCD_data(bReceive);
-			_delay_ms(10000);
-			LCD_cmd(LCD_CLEAR);
-			LCD_data(bscanf());
-			_delay_ms(10000);
-			LCD_cmd(LCD_CLEAR);
-			bReceive=0;
-		}
->>>>>>> 5cd340369b21e328ce2b491afa665b3cb6d06015
-    }
+	}
 }
 
 
