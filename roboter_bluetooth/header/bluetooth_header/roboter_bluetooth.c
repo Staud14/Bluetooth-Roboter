@@ -11,13 +11,7 @@
 
 
 void bluetooth_init(void)
-{
-	//Activate the send and receive pins
-	UCSR1B |= (1 << TXEN1) | (1 << RXEN1);
-	
-	//Interrupt enablen
-	UCSR1B |= (1 << RXCIE1);
-	
+{		
 	//Serial infterface configuration
 	UCSR1C = 0b00000110;		//0b 00						00			011					0 
 								//   Asynchronos Usart		Parity		8Bit receive		clock parity
@@ -25,13 +19,19 @@ void bluetooth_init(void)
 	UBRR1H = (uint8_t)(UART_BAUD_RATE_CALC(UART_BAUD_RATE,F_CPU) >> 8);
 	UBRR1L = (uint8_t)UART_BAUD_RATE_CALC(UART_BAUD_RATE,F_CPU);
 	
+	//Interrupt enablen
+	UCSR1B |= (1 << RXCIE1);
+	
+	//Activate the send and receive pins
+	UCSR1B |= (1 << TXEN1) | (1 << RXEN1);
+	
 	//Handshake should be programmed
 	
 }
 
 unsigned int bprintf(char trans)
 {
-	while( !(UCSR1A & (1<<UDRE1)));		//warte bis UDR bereit		UDRE in UCSR1A = 0 wenn sende puffer leer
+	while( ! (UCSR1A & (1<<UDRE1)));		//warte bis UDR bereit		UDRE in UCSR1A = 0 wenn sende puffer leer
 	UDR1 = trans;
 	return TRANSMITTED;
 }

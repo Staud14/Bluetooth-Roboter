@@ -49,7 +49,10 @@ int main(void)
 		if(bReceive != 0)
 		{
 			LCD_data(bReceive);
-			_delay_ms(1000);
+			_delay_ms(10000);
+			LCD_cmd(LCD_CLEAR);
+			LCD_data(bscanf());
+			_delay_ms(10000);
 			LCD_cmd(LCD_CLEAR);
 		}
     }

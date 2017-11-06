@@ -1,4 +1,4 @@
-/*
+ /*
  * roboter_bluetooth.h
  *
  * Created: 21.10.2017
@@ -37,7 +37,7 @@
 //*************************************************************************************************
 
 #define F_CPU 16000000UL
-#define UART_BAUD_RATE 9600UL			//9,600 Bd
+#define UART_BAUD_RATE 9600L			//9,600 Bd
 #define UART_BAUD_RATE_CALC(UART_BAUD_RATE, F_CPU) ((F_CPU)/((UART_BAUD_RATE)*16L)-1)
 #define TRANSMITTED 1
 
