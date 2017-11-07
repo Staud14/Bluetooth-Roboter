@@ -40,14 +40,19 @@ int main(void)
 	drive(MOTL, 0);	
 	
     while (1) 
-    {				
+    {	
+		
+		bprintf(bReceive);
+					
 		if((bReceive & MASK_SELECT) == MOTR)
 		{
 			drive(MOTR, ((bReceive & MASK_PWM) + 62));
+			bReceive = 0;
 		}
 		else if((bReceive & MASK_SELECT) == MOTL)
 		{
 			drive(MOTL, ((bReceive & MASK_PWM) + 62));
+			bReceive = 0;
 		}
     }
 }
