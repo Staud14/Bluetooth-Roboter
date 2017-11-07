@@ -2,7 +2,7 @@
  * roboter_bluetooth.c
  *
  * Created: 21.10.2017 10:45:37
- * Author : patri
+ * Author : patrik
  */ 
 
 #define F_CPU 16000000UL
