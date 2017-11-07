@@ -43,11 +43,11 @@ int main(void)
     {				
 		if((bReceive & MASK_SELECT) == MOTR)
 		{
-			drive(MOTR, (bReceive & MASK_PWM));
+			drive(MOTR, ((bReceive & MASK_PWM) + 62));
 		}
 		else if((bReceive & MASK_SELECT) == MOTL)
 		{
-			drive(MOTL, (bReceive & MASK_PWM));
+			drive(MOTL, ((bReceive & MASK_PWM) + 62));
 		}
     }
 }

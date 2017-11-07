@@ -3,31 +3,31 @@ roboter_bluetooth.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000630  2**0
+  0 .data         00000000  00800100  00800100  00000634  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000005bc  00000000  00000000  00000074  2**1
+  1 .text         000005c0  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000005  00800100  00800100  00000630  2**0
+  2 .bss          00000005  00800100  00800100  00000634  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000630  2**0
+  3 .comment      00000030  00000000  00000000  00000634  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000660  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000664  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 000000f0  00000000  00000000  000006a0  2**0
+  5 .debug_aranges 000000f0  00000000  00000000  000006a4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000124a  00000000  00000000  00000790  2**0
+  6 .debug_info   0000124a  00000000  00000000  00000794  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000d2d  00000000  00000000  000019da  2**0
+  7 .debug_abbrev 00000d2d  00000000  00000000  000019de  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000c23  00000000  00000000  00002707  2**0
+  8 .debug_line   00000c23  00000000  00000000  0000270b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000001e4  00000000  00000000  0000332c  2**2
+  9 .debug_frame  000001e4  00000000  00000000  00003330  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    0000062f  00000000  00000000  00003510  2**0
+ 10 .debug_str    0000062f  00000000  00000000  00003514  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000557  00000000  00000000  00003b3f  2**0
+ 11 .debug_loc    00000557  00000000  00000000  00003b43  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000b0  00000000  00000000  00004096  2**0
+ 12 .debug_ranges 000000b0  00000000  00000000  0000409a  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -58,7 +58,7 @@ Disassembly of section .text:
   58:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
   5c:	0c 94 74 01 	jmp	0x2e8	; 0x2e8 <__vector_23>
   60:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
-  64:	0c 94 b2 02 	jmp	0x564	; 0x564 <__vector_25>
+  64:	0c 94 b4 02 	jmp	0x568	; 0x568 <__vector_25>
   68:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
   6c:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
   70:	0c 94 68 00 	jmp	0xd0	; 0xd0 <__bad_interrupt>
@@ -99,7 +99,7 @@ Disassembly of section .text:
   c4:	b2 07       	cpc	r27, r18
   c6:	e1 f7       	brne	.-8      	; 0xc0 <.do_clear_bss_loop>
   c8:	0e 94 86 02 	call	0x50c	; 0x50c <main>
-  cc:	0c 94 dc 02 	jmp	0x5b8	; 0x5b8 <_exit>
+  cc:	0c 94 de 02 	jmp	0x5bc	; 0x5bc <_exit>
 
 000000d0 <__bad_interrupt>:
   d0:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -485,7 +485,7 @@ void _delay_ms(long int _ms)
 	while(counter_timer != (_ms*1000));
  2b8:	a8 ee       	ldi	r26, 0xE8	; 232
  2ba:	b3 e0       	ldi	r27, 0x03	; 3
- 2bc:	0e 94 c2 02 	call	0x584	; 0x584 <__muluhisi3>
+ 2bc:	0e 94 c4 02 	call	0x588	; 0x588 <__muluhisi3>
  2c0:	61 15       	cp	r22, r1
  2c2:	71 05       	cpc	r23, r1
  2c4:	81 05       	cpc	r24, r1
@@ -861,77 +861,79 @@ int main(void)
  548:	86 2f       	mov	r24, r22
  54a:	80 7c       	andi	r24, 0xC0	; 192
  54c:	80 34       	cpi	r24, 0x40	; 64
- 54e:	21 f4       	brne	.+8      	; 0x558 <main+0x4c>
+ 54e:	29 f4       	brne	.+10     	; 0x55a <main+0x4e>
 		{
-			drive(MOTR, (bReceive & MASK_PWM));
+			drive(MOTR, ((bReceive & MASK_PWM) + 62));
  550:	6f 73       	andi	r22, 0x3F	; 63
- 552:	0e 94 7b 00 	call	0xf6	; 0xf6 <drive>
- 556:	f6 cf       	rjmp	.-20     	; 0x544 <main+0x38>
+ 552:	62 5c       	subi	r22, 0xC2	; 194
+ 554:	0e 94 7b 00 	call	0xf6	; 0xf6 <drive>
+ 558:	f5 cf       	rjmp	.-22     	; 0x544 <main+0x38>
 		}
 		else if((bReceive & MASK_SELECT) == MOTL)
- 558:	80 38       	cpi	r24, 0x80	; 128
- 55a:	a1 f7       	brne	.-24     	; 0x544 <main+0x38>
+ 55a:	80 38       	cpi	r24, 0x80	; 128
+ 55c:	99 f7       	brne	.-26     	; 0x544 <main+0x38>
 		{
-			drive(MOTL, (bReceive & MASK_PWM));
- 55c:	6f 73       	andi	r22, 0x3F	; 63
- 55e:	0e 94 7b 00 	call	0xf6	; 0xf6 <drive>
- 562:	f0 cf       	rjmp	.-32     	; 0x544 <main+0x38>
+			drive(MOTL, ((bReceive & MASK_PWM) + 62));
+ 55e:	6f 73       	andi	r22, 0x3F	; 63
+ 560:	62 5c       	subi	r22, 0xC2	; 194
+ 562:	0e 94 7b 00 	call	0xf6	; 0xf6 <drive>
+ 566:	ee cf       	rjmp	.-36     	; 0x544 <main+0x38>
 
-00000564 <__vector_25>:
+00000568 <__vector_25>:
     }
 }
 
 
 ISR(USART1_RX_vect)
 {
- 564:	1f 92       	push	r1
- 566:	0f 92       	push	r0
- 568:	0f b6       	in	r0, 0x3f	; 63
+ 568:	1f 92       	push	r1
  56a:	0f 92       	push	r0
- 56c:	11 24       	eor	r1, r1
- 56e:	8f 93       	push	r24
+ 56c:	0f b6       	in	r0, 0x3f	; 63
+ 56e:	0f 92       	push	r0
+ 570:	11 24       	eor	r1, r1
+ 572:	8f 93       	push	r24
 	bReceive = UDR1;
- 570:	80 91 ce 00 	lds	r24, 0x00CE	; 0x8000ce <__TEXT_REGION_LENGTH__+0x7e00ce>
- 574:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <bReceive>
+ 574:	80 91 ce 00 	lds	r24, 0x00CE	; 0x8000ce <__TEXT_REGION_LENGTH__+0x7e00ce>
+ 578:	80 93 04 01 	sts	0x0104, r24	; 0x800104 <bReceive>
 }
- 578:	8f 91       	pop	r24
- 57a:	0f 90       	pop	r0
- 57c:	0f be       	out	0x3f, r0	; 63
+ 57c:	8f 91       	pop	r24
  57e:	0f 90       	pop	r0
- 580:	1f 90       	pop	r1
- 582:	18 95       	reti
+ 580:	0f be       	out	0x3f, r0	; 63
+ 582:	0f 90       	pop	r0
+ 584:	1f 90       	pop	r1
+ 586:	18 95       	reti
 
-00000584 <__muluhisi3>:
- 584:	0e 94 cd 02 	call	0x59a	; 0x59a <__umulhisi3>
- 588:	a5 9f       	mul	r26, r21
- 58a:	90 0d       	add	r25, r0
- 58c:	b4 9f       	mul	r27, r20
+00000588 <__muluhisi3>:
+ 588:	0e 94 cf 02 	call	0x59e	; 0x59e <__umulhisi3>
+ 58c:	a5 9f       	mul	r26, r21
  58e:	90 0d       	add	r25, r0
- 590:	a4 9f       	mul	r26, r20
- 592:	80 0d       	add	r24, r0
- 594:	91 1d       	adc	r25, r1
- 596:	11 24       	eor	r1, r1
- 598:	08 95       	ret
+ 590:	b4 9f       	mul	r27, r20
+ 592:	90 0d       	add	r25, r0
+ 594:	a4 9f       	mul	r26, r20
+ 596:	80 0d       	add	r24, r0
+ 598:	91 1d       	adc	r25, r1
+ 59a:	11 24       	eor	r1, r1
+ 59c:	08 95       	ret
 
-0000059a <__umulhisi3>:
- 59a:	a2 9f       	mul	r26, r18
- 59c:	b0 01       	movw	r22, r0
- 59e:	b3 9f       	mul	r27, r19
- 5a0:	c0 01       	movw	r24, r0
- 5a2:	a3 9f       	mul	r26, r19
- 5a4:	70 0d       	add	r23, r0
- 5a6:	81 1d       	adc	r24, r1
- 5a8:	11 24       	eor	r1, r1
- 5aa:	91 1d       	adc	r25, r1
- 5ac:	b2 9f       	mul	r27, r18
- 5ae:	70 0d       	add	r23, r0
- 5b0:	81 1d       	adc	r24, r1
- 5b2:	11 24       	eor	r1, r1
- 5b4:	91 1d       	adc	r25, r1
- 5b6:	08 95       	ret
+0000059e <__umulhisi3>:
+ 59e:	a2 9f       	mul	r26, r18
+ 5a0:	b0 01       	movw	r22, r0
+ 5a2:	b3 9f       	mul	r27, r19
+ 5a4:	c0 01       	movw	r24, r0
+ 5a6:	a3 9f       	mul	r26, r19
+ 5a8:	70 0d       	add	r23, r0
+ 5aa:	81 1d       	adc	r24, r1
+ 5ac:	11 24       	eor	r1, r1
+ 5ae:	91 1d       	adc	r25, r1
+ 5b0:	b2 9f       	mul	r27, r18
+ 5b2:	70 0d       	add	r23, r0
+ 5b4:	81 1d       	adc	r24, r1
+ 5b6:	11 24       	eor	r1, r1
+ 5b8:	91 1d       	adc	r25, r1
+ 5ba:	08 95       	ret
 
-000005b8 <_exit>:
- 5b8:	f8 94       	cli
+000005bc <_exit>:
+ 5bc:	f8 94       	cli
 
-000005ba <__stop_program>:
- 5ba:	ff cf       	rjmp	.-2      	; 0x5ba <__stop_program>
+000005be <__stop_program>:
+ 5be:	ff cf       	rjmp	.-2      	; 0x5be <__stop_program>
