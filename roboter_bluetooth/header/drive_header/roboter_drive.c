@@ -157,7 +157,11 @@ void _delay_ms(long int _ms)
 void _delay_us(long int _us)
 {
 	counter_timer=0;
+<<<<<<< HEAD
 	while(counter_timer < (_us +1));
+=======
+	while(counter_timer <= _us);
+>>>>>>> 345272e8c701603c2b4ef3de392badd4cbd12256
 }
 
 
