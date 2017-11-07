@@ -18,8 +18,7 @@
 unsigned char bReceive = 0;
 
 int main(void)
-{
-	
+{	
 	JTAG_DISABLE();
     /************************************/
     /* I2C - IO - Expander				*/
@@ -37,31 +36,18 @@ int main(void)
 	
 	sei();
 	
-	drive(MOT_FAST_STOPP, PWM_R_STOPP, MOT_FAST_STOPP, PWM_L_STOPP);
-	
-	
+	drive(MOTR, 0);
+	drive(MOTL, 0);	
 	
     while (1) 
     {				
-		//bprintf('a');
-		
-		LCD_data(bReceive);		
-		
-		bprintf(bReceive);
-			
-		bReceive=0;			
-			
-		
-		if(bReceive != 0)
+		if((bReceive & MASK_SELECT) == MOTR)
 		{
-			bprintf(bReceive);
-			LCD_data(bReceive);
-			_delay_ms(10000);
-			LCD_cmd(LCD_CLEAR);
-			LCD_data(bscanf());
-			_delay_ms(10000);
-			LCD_cmd(LCD_CLEAR);
-			bReceive=0;
+			drive(MOTR, (bReceive & MASK_PWM));
+		}
+		else if((bReceive & MASK_SELECT) == MOTL)
+		{
+			drive(MOTL, (bReceive & MASK_PWM));
 		}
     }
 }

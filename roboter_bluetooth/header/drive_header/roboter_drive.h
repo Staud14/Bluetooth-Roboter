@@ -38,6 +38,12 @@
 #define PWM_L_RET_MAX	125			//2,02 ms (WALC: 2 ms)
 #define PWM_L_STOPP		94			//1,52 ms (WALC: 1,504 ms)
 
+
+#define MOTR			(0x40)
+#define MOTL			(0x80)
+#define MASK_SELECT		(0xc0)
+#define MASK_PWM		(0x3f)
+
 //*************************************************************************************************
 //*** LED *****
 //*************************************************************************************************
@@ -70,7 +76,7 @@
 //***Prototypes*****
 //************************************************************************************************
 
-void drive(unsigned char dir_motr, unsigned char pwm_rechts, unsigned char dir_motl, unsigned char pwm_links);
+void drive(unsigned char select, unsigned char mot_pwm);
 unsigned int adc_measure(unsigned char channel);
 void akkuzustand (void);
 void roboter_init(void);

@@ -13,39 +13,20 @@
 long int counter_timer = 0;
 
 
-void drive(unsigned char dir_motr, unsigned char pwm_rechts, unsigned char dir_motl, unsigned char pwm_links)
+void drive(unsigned char select, unsigned char mot_pwm)
 {
 
 	// MOTOR RECHTS
-	if (dir_motr == 2)				//Motor rechts Stopp
+	if (select == MOTR)					//Motor rechts
 	{
-		OCR4B = 0;					//rechts PWM=0
+		OCR4B = mot_pwm;				//rechts PWM
 	}
-	else if (dir_motr == 1)			//rechts mit PWM vorwärts
-	{
-		if ((pwm_rechts>=PWM_R_STOPP)&&(pwm_rechts<PWM_R_VOR_MAX+1)) {OCR4B = pwm_rechts;}
-		else {OCR4B = PWM_R_VOR_MAX;}			//vollgas rechts vor
-	}
-	else
-	{
-		if ((pwm_rechts<=PWM_R_STOPP)&&(pwm_rechts>PWM_R_RET_MAX-1)) {OCR4B = pwm_rechts;}			//rechts mit PWM retour
-		else {OCR4B = PWM_R_RET_MAX;}			//vollgas rechts retour
-	}
-
+	
+	
 	// MOTOR LINKS
-	if (dir_motl == 2)				//Motor links Stopp
+	if (select == MOTL)				//Motor links
 	{
-		OCR4D = 0;					//links PWM=0
-	}
-	else if (dir_motl == 1)			//links mit PWM vorwärts
-	{
-		if ((pwm_links>PWM_L_VOR_MAX-1)&&(pwm_links<=PWM_L_STOPP)) {OCR4D = pwm_links;}
-		else {OCR4D = PWM_L_VOR_MAX;}		//vollgas links  vor
-	}
-	else
-	{
-		if ((pwm_links>=PWM_L_STOPP)&&(pwm_links<PWM_L_RET_MAX+1)) {OCR4D = pwm_links;}	//links mit PWM retour
-		else {OCR4D = PWM_L_RET_MAX;}		//vollgas links retour
+		OCR4D = mot_pwm;				//links PWM
 	}
 }
 
