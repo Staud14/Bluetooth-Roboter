@@ -16,7 +16,6 @@ Discarded input sections
  .text          0x00000000        0x0 header/bluetooth_header/roboter_bluetooth.o
  .data          0x00000000        0x0 header/bluetooth_header/roboter_bluetooth.o
  .bss           0x00000000        0x0 header/bluetooth_header/roboter_bluetooth.o
- .text.bprintf  0x00000000       0x14 header/bluetooth_header/roboter_bluetooth.o
  .text.bscanf   0x00000000       0x10 header/bluetooth_header/roboter_bluetooth.o
  .text          0x00000000        0x0 header/drive_header/roboter_drive.o
  .data          0x00000000        0x0 header/drive_header/roboter_drive.o
@@ -220,7 +219,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x5c0
+.text           0x00000000      0x5e4
  *(.vectors)
  .vectors       0x00000000       0xac F:/Programms/Atmel Studio 7.0/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32u4/avr5/crtatmega32u4.o
                 0x00000000                __vector_default
@@ -323,51 +322,53 @@ END GROUP
  .text.bluetooth_init
                 0x000000d4       0x22 header/bluetooth_header/roboter_bluetooth.o
                 0x000000d4                bluetooth_init
- .text.drive    0x000000f6       0x14 header/drive_header/roboter_drive.o
-                0x000000f6                drive
+ .text.bprintf  0x000000f6       0x14 header/bluetooth_header/roboter_bluetooth.o
+                0x000000f6                bprintf
+ .text.drive    0x0000010a       0x14 header/drive_header/roboter_drive.o
+                0x0000010a                drive
  .text.adc_measure
-                0x0000010a       0x76 header/drive_header/roboter_drive.o
-                0x0000010a                adc_measure
+                0x0000011e       0x76 header/drive_header/roboter_drive.o
+                0x0000011e                adc_measure
  .text.akkuzustand
-                0x00000180       0x68 header/drive_header/roboter_drive.o
-                0x00000180                akkuzustand
+                0x00000194       0x68 header/drive_header/roboter_drive.o
+                0x00000194                akkuzustand
  .text.roboter_init
-                0x000001e8       0xbc header/drive_header/roboter_drive.o
-                0x000001e8                roboter_init
+                0x000001fc       0xbc header/drive_header/roboter_drive.o
+                0x000001fc                roboter_init
  .text._delay_ms
-                0x000002a4       0x28 header/drive_header/roboter_drive.o
-                0x000002a4                _delay_ms
+                0x000002b8       0x28 header/drive_header/roboter_drive.o
+                0x000002b8                _delay_ms
  .text._delay_us
-                0x000002cc       0x1c header/drive_header/roboter_drive.o
-                0x000002cc                _delay_us
+                0x000002e0       0x1c header/drive_header/roboter_drive.o
+                0x000002e0                _delay_us
  .text.__vector_23
-                0x000002e8       0x4e header/drive_header/roboter_drive.o
-                0x000002e8                __vector_23
+                0x000002fc       0x4e header/drive_header/roboter_drive.o
+                0x000002fc                __vector_23
  .text.write_i2c
-                0x00000336       0x8e header/I2C_header/roboter_I2C.o
-                0x00000336                write_i2c
+                0x0000034a       0x8e header/I2C_header/roboter_I2C.o
+                0x0000034a                write_i2c
  .text.LCD_init
-                0x000003c4       0x96 header/I2C_header/roboter_I2C.o
-                0x000003c4                LCD_init
+                0x000003d8       0x96 header/I2C_header/roboter_I2C.o
+                0x000003d8                LCD_init
  .text.I2C_init
-                0x0000045a       0xb2 header/I2C_header/roboter_I2C.o
-                0x0000045a                I2C_init
- .text.main     0x0000050c       0x5c main.o
-                0x0000050c                main
+                0x0000046e       0xb2 header/I2C_header/roboter_I2C.o
+                0x0000046e                I2C_init
+ .text.main     0x00000520       0x6c main.o
+                0x00000520                main
  .text.__vector_25
-                0x00000568       0x20 main.o
-                0x00000568                __vector_25
+                0x0000058c       0x20 main.o
+                0x0000058c                __vector_25
  .text.libgcc.mul
-                0x00000588       0x16 f:/programms/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_muluhisi3.o)
-                0x00000588                __muluhisi3
+                0x000005ac       0x16 f:/programms/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_muluhisi3.o)
+                0x000005ac                __muluhisi3
  .text.libgcc.mul
-                0x0000059e       0x1e f:/programms/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
-                0x0000059e                __umulhisi3
-                0x000005bc                . = ALIGN (0x2)
+                0x000005c2       0x1e f:/programms/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_umulhisi3.o)
+                0x000005c2                __umulhisi3
+                0x000005e0                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000005bc        0x0 f:/programms/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x000005bc                _exit
-                0x000005bc                exit
+ .fini9         0x000005e0        0x0 f:/programms/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x000005e0                _exit
+                0x000005e0                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -386,11 +387,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000005bc        0x4 f:/programms/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x000005e0        0x4 f:/programms/atmel studio 7.0/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000005c0                _etext = .
+                0x000005e4                _etext = .
 
-.data           0x00800100        0x0 load address 0x000005c0
+.data           0x00800100        0x0 load address 0x000005e4
                 [!provide]                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -412,8 +413,8 @@ END GROUP
                 0x00800104                bReceive
  *(COMMON)
                 0x00800105                PROVIDE (__bss_end, .)
-                0x000005c0                __data_load_start = LOADADDR (.data)
-                0x000005c0                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000005e4                __data_load_start = LOADADDR (.data)
+                0x000005e4                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800105        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -501,13 +502,13 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x124a
+.debug_info     0x00000000     0x1260
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x9f4 F:/Programms/Atmel Studio 7.0/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32u4/avr5/crtatmega32u4.o
  .debug_info    0x000009f4       0xd2 header/bluetooth_header/roboter_bluetooth.o
  .debug_info    0x00000ac6      0x22a header/drive_header/roboter_drive.o
  .debug_info    0x00000cf0      0x3fc header/I2C_header/roboter_I2C.o
- .debug_info    0x000010ec      0x15e main.o
+ .debug_info    0x000010ec      0x174 main.o
 
 .debug_abbrev   0x00000000      0xd2d
  *(.debug_abbrev)
@@ -517,13 +518,13 @@ END GROUP
  .debug_abbrev  0x00000b6b      0x10b header/I2C_header/roboter_I2C.o
  .debug_abbrev  0x00000c76       0xb7 main.o
 
-.debug_line     0x00000000      0xc23
+.debug_line     0x00000000      0xc35
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x199 F:/Programms/Atmel Studio 7.0/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32u4/avr5/crtatmega32u4.o
  .debug_line    0x00000199      0x132 header/bluetooth_header/roboter_bluetooth.o
  .debug_line    0x000002cb      0x2fd header/drive_header/roboter_drive.o
  .debug_line    0x000005c8      0x4c8 header/I2C_header/roboter_I2C.o
- .debug_line    0x00000a90      0x193 main.o
+ .debug_line    0x00000a90      0x1a5 main.o
 
 .debug_frame    0x00000000      0x1e4
  *(.debug_frame)
@@ -542,7 +543,7 @@ END GROUP
  .debug_str     0x000005a4       0x65 header/I2C_header/roboter_I2C.o
                                 0x1eb (size before relaxing)
  .debug_str     0x00000609       0x26 main.o
-                                0x1c2 (size before relaxing)
+                                0x1ca (size before relaxing)
 
 .debug_loc      0x00000000      0x557
  *(.debug_loc)
