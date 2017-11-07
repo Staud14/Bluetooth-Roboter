@@ -8,7 +8,14 @@
 #define F_CPU 16000000UL
 
 #include <avr/io.h>
+
+#ifdef SELF_DELAY
 #include "../drive_header/roboter_drive.h"
+#endif
+
+#ifndef SELF_DELAY
+#include <util/delay.h>
+#endif
 
 #include "roboter_I2C.h"
 

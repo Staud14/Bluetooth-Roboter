@@ -80,8 +80,13 @@ void drive(unsigned char select, unsigned char mot_pwm);
 unsigned int adc_measure(unsigned char channel);
 void akkuzustand (void);
 void roboter_init(void);
+
+#ifdef SELF_DELAY
+
 void _delay_ms(long int _ms);
 void _delay_us(long int __us);
+
+#endif
 
 /*************************************************************************************************
 ***Function description*****

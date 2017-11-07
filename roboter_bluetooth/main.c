@@ -32,11 +32,13 @@ int main(void)
     
     roboter_init();
 	bluetooth_init();
+	I2C_init();							//I2C Initialisierung
+	LCD_init();
+	
 	
 	sei();
 	
-	I2C_init();							//I2C Initialisierung
-	LCD_init();
+	
 	
 	drive(MOTR, 0);
 	drive(MOTL, 0);	

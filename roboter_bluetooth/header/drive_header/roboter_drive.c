@@ -10,7 +10,14 @@
 #include <avr/interrupt.h>
 #include "roboter_drive.h"
 
+#ifndef SELF_DELAY
+#include <util/delay.h>
+#endif
+
+
+#ifdef SELF_DELAY
 long int counter_timer = 0;
+#endif
 
 
 void drive(unsigned char select, unsigned char mot_pwm)
@@ -121,14 +128,14 @@ void roboter_init(void)
 	TCCR4B = TCCR4B &~(1<<CS41);		//f_CLK_T4 = CLK_IO/Prescaler = 16MHz/256 = 62,5kHz
 	TCCR4B = TCCR4B | (1<<CS40);		//Timer4 Prescaler = 1, Start PWM
 	
-	
+#ifdef SELF_DELAY	
 	//Timer 0 for _delay_ms and _delay_us
 	
 	TCCR0A = 0x00;
 	TCCR0B |= (1<<CS01);
 	TCNT0 = PRELOAD_TIMER0;
 	TIMSK0 |= (1 << TOIE0);
-
+#endif
 
 	
 	akkuzustand();						//ein paar mal messen damit ADC warm läuft
@@ -138,16 +145,19 @@ void roboter_init(void)
 	akkuzustand();
 }
 
+
+#ifdef SELF_DELAY
+
 void _delay_ms(long int _ms)
 {
 	counter_timer=0;
-	while(counter_timer != (_ms*1000));
+	while(counter_timer < ((_ms * 1000) + 1));
 }
 
 void _delay_us(long int _us)
 {
 	counter_timer=0;
-	while(counter_timer != _us);
+	while(counter_timer < (_us +1));
 }
 
 
@@ -162,3 +172,5 @@ ISR(TIMER0_OVF_vect)												//Interrrupt sub routine timer 0 (8bit Timer)
 	}
 	
 }
+
+#endif
