@@ -11,3 +11,5 @@ roboter_bluetooth/roboter_bluetooth/roboter_bluetooth.componentinfo
 *.map
 *.sig
 *.srec
+roboter_bluetooth/roboter_bluetooth.componentinfo.xml
+.vs/roboter_bluetooth/v14/.atsuo
