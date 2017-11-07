@@ -853,17 +853,19 @@ int main(void)
  530:	8c e0       	ldi	r24, 0x0C	; 12
  532:	80 93 b8 00 	sts	0x00B8, r24	; 0x8000b8 <__TEXT_REGION_LENGTH__+0x7e00b8>
     
-    I2C_init();							//I2C Initialisierung
- 536:	0e 94 37 02 	call	0x46e	; 0x46e <I2C_init>
-	LCD_init();
- 53a:	0e 94 ec 01 	call	0x3d8	; 0x3d8 <LCD_init>
+    
     roboter_init();
- 53e:	0e 94 fe 00 	call	0x1fc	; 0x1fc <roboter_init>
+ 536:	0e 94 fe 00 	call	0x1fc	; 0x1fc <roboter_init>
 	bluetooth_init();
- 542:	0e 94 6a 00 	call	0xd4	; 0xd4 <bluetooth_init>
+ 53a:	0e 94 6a 00 	call	0xd4	; 0xd4 <bluetooth_init>
 	
 	sei();
- 546:	78 94       	sei
+ 53e:	78 94       	sei
+	
+	I2C_init();							//I2C Initialisierung
+ 540:	0e 94 37 02 	call	0x46e	; 0x46e <I2C_init>
+	LCD_init();
+ 544:	0e 94 ec 01 	call	0x3d8	; 0x3d8 <LCD_init>
 	
 	drive(MOTR, 0);
  548:	60 e0       	ldi	r22, 0x00	; 0

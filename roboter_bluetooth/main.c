@@ -29,12 +29,14 @@ int main(void)
 
     TWBR = 12;							//TWBR=12, TWPS=0 im Reg. TWSR per default, damit f_SCL = 400 kHz
     
-    I2C_init();							//I2C Initialisierung
-	LCD_init();
+    
     roboter_init();
 	bluetooth_init();
 	
 	sei();
+	
+	I2C_init();							//I2C Initialisierung
+	LCD_init();
 	
 	drive(MOTR, 0);
 	drive(MOTL, 0);	
