@@ -19,6 +19,8 @@
 long int counter_timer = 0;
 #endif
 
+volatile unsigned char akkuLevel, newAkkuLevel, firstCheck;
+
 
 void drive(unsigned char select, unsigned char mot_pwm)
 {
@@ -157,11 +159,7 @@ void _delay_ms(long int _ms)
 void _delay_us(long int _us)
 {
 	counter_timer=0;
-<<<<<<< HEAD
 	while(counter_timer < (_us +1));
-=======
-	while(counter_timer <= _us);
->>>>>>> 345272e8c701603c2b4ef3de392badd4cbd12256
 }
 
 
@@ -178,3 +176,69 @@ ISR(TIMER0_OVF_vect)												//Interrrupt sub routine timer 0 (8bit Timer)
 }
 
 #endif
+
+ISR(ADC_vect)
+{
+	unsigned int wait;
+	unsigned char x, y;
+
+	newAkkuLevel = ADCH;
+	if (akkuLevel > newAkkuLevel)
+	akkuLevel = newAkkuLevel;
+
+	if (firstCheck)
+	{
+		firstCheck = FALSE;
+
+		PORTB |= (1<<LED_LV)|(1<<LED_LH);
+		PORTB |= (1<<LED_RV)|(1<<LED_RH);
+
+
+		if (akkuLevel > 210)
+		{
+			x = (akkuLevel - 200) / 5;
+
+			PORTB &= ~(1 << LED_GRUEN);
+			for (y = 0; y < x; y++)
+			{
+				for(wait = 0; wait < 60000; wait++)  PORTB |=  (1 << LED_GRUEN);
+				for(wait = 0; wait < 60000; wait++)  PORTB &= ~(1 << LED_GRUEN);
+			}
+		}
+		else if (akkuLevel > 205)
+		{
+
+			for(wait = 0; wait < 60000; wait++)
+			{
+				PORTB |= (1 << LED_ROT);
+				PORTB |= (1 << LED_GRUEN);
+			}
+		}
+		else
+		{
+			for(wait = 0; wait < 60000; wait++)  PORTB |= (1 << LED_ROT);
+		}
+		PORTB &= ~(1 << LED_GRUEN);
+		PORTB &= ~(1 << LED_ROT);
+	}
+
+	if (akkuLevel < 200)
+	{
+
+		TCCR4B &= 0xF0;		//alle Motoren stopp, Motor PWM aus
+		PORTB  &= 0x30;		//alle LEDs am Ring aus, Beeper und Motor right aus
+		PORTD  =  0x08;		//Motor left und alle IR-Sender aus
+
+		cli();
+		while(1)
+		{
+			for(wait = 0; wait < 60000; wait++)  PORTB |= (1 << LED_ROT);
+			for(wait = 0; wait < 40000; wait++)  PORTB &= ~(1 << LED_ROT);
+		}
+		PORTB &= ~(1<<LED_LV) & ~(1<<LED_LH);
+		PORTB &= ~(1<<LED_RV) & ~(1<<LED_RH);
+
+	}
+
+
+}
