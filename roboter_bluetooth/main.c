@@ -17,6 +17,20 @@
 
 unsigned char bReceive = 0;
 
+struct adctobyte
+{
+	unsigned int L : 8;
+	unsigned int U : 2;
+}
+union ADC
+{
+	unsigned int in;
+	struct adctobyte out 10;
+}
+
+
+
+
 int main(void)
 {	
 	JTAG_DISABLE();
@@ -58,8 +72,8 @@ int main(void)
 			bReceive = 0;
 		}
 		{
-			ADC adc;
-			adc.in = 0b 0000 0010 0000 0001
+			union ADC adc;
+			adc.in = (0b00000001 << 8) + 0b00000000;
 			//adc.in = adc_measure(MEASURE_UB);
 			bprintf(adc.out.L);
 		}
