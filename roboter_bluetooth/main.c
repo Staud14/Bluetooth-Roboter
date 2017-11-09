@@ -29,7 +29,6 @@ int main(void)
 
     TWBR = 12;							//TWBR=12, TWPS=0 im Reg. TWSR per default, damit f_SCL = 400 kHz
     
-    
     roboter_init();
 	bluetooth_init();
 	I2C_init();							//I2C Initialisierung
@@ -58,7 +57,13 @@ int main(void)
 			drive(MOTL, ((bReceive & MASK_PWM) + 62));
 			bReceive = 0;
 		}
-    }
+		{
+			ADC adc;
+			adc.in = 0b 0000 0010 0000 0001
+			//adc.in = adc_measure(MEASURE_UB);
+			bprintf(adc.out.L);
+		}
+	}
 }
 
 
