@@ -168,7 +168,7 @@ ISR(TIMER0_OVF_vect)												//Interrrupt sub routine timer 0 (8bit Timer)
 	TCNT0 = PRELOAD_TIMER0;
 	
 	counter_timer++;
-	if (counter_timer > 4294967290)
+	if (counter_timer > 4294967290)				//2^32-6			Making sure the timer doesn't overflow
 	{
 		counter_timer = 4294967290;
 	}
