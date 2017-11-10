@@ -163,7 +163,9 @@ int main(void)
 		}
 	}
 	
+#ifndef ADC_INTERRUPT
 	akkuzustand();
+#endif
 }
 
 

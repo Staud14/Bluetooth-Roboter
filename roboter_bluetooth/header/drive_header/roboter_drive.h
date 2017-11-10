@@ -65,6 +65,7 @@
 #define MEASURE_UB		0			//ADC0	PF0
 #define TRUE            1
 #define FALSE           0
+#define ADC_INTERRUPT
 
 
 //*************************************************************************************************
@@ -90,10 +91,17 @@
 //***Prototypes*****
 //************************************************************************************************
 
+void roboter_init(void);
 void drive(unsigned char select, unsigned char mot_pwm);
 unsigned int adc_measure(unsigned char channel);
+
+#ifdef ADC_INTERRUPT
+void adc_init(void);
+#endif
+
+#ifndef ADC_INTERRUPT
 void akkuzustand (void);
-void roboter_init(void);
+#endif
 
 void timer_beeper_init(void);
 void timer_beep_tone(unsigned int frequenz);

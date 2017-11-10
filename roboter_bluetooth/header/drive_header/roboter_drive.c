@@ -68,7 +68,7 @@ unsigned int adc_measure(unsigned char channel)
 	return result;
 }
 
-
+#ifndef ADC_INTERRUPT
 void akkuzustand (void)
 {
 	unsigned int akku;
@@ -92,7 +92,7 @@ void akkuzustand (void)
 		}
 	}
 }
-
+#endif
 
 void roboter_init(void)
 {	
@@ -137,14 +137,33 @@ void roboter_init(void)
 	TCCR4B = TCCR4B &~(1<<CS41);		//f_CLK_T4 = CLK_IO/Prescaler = 16MHz/256 = 62,5kHz
 	TCCR4B = TCCR4B | (1<<CS40);		//Timer4 Prescaler = 1, Start PWM
 	
-
-/*										//nicht benötigt da interrupt vorhanden
+#ifndef ADC_INTERRUPT
+										//nicht benötigt da interrupt vorhanden
 	akkuzustand();						//ein paar mal messen damit ADC warm läuft
 	akkuzustand();
 	akkuzustand();
 	akkuzustand();
 	akkuzustand();
-*/
+#endif
+}
+
+#ifdef ADC_INTERRUPT
+void adc_init(void)
+{
+
+	ADMUX &= ~(1<<REFS1)&~(1<<REFS0);			//ext. AREF = 5V
+	ADMUX |= (1<<ADLAR);						//linksbündig
+
+	ADCSRB = 0; // freerunning
+	ADCSRB &= ~(1<<MUX5);
+	ADMUX &= ~(1<<MUX4)&~(1<<MUX3);
+	ADMUX &= ~(1<<MUX2)&~(1<<MUX1)&~(1<<MUX0);			//ADC0 single ended Messung Measure UB777
+
+
+
+	ADCSRA |= (1<<ADEN)|(1<<ADATE)|(1<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);	//ADC einschalten, Teiler auf 128 -> 125kHz Samplingfrequenz
+	ADCSRA |= (1<<ADSC);
+
 }
 
 
@@ -214,7 +233,7 @@ ISR(ADC_vect)
 
 
 }
-
+#endif
 
 void timer_beeper_init(void)
 {
