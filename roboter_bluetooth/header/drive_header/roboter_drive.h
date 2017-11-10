@@ -72,6 +72,7 @@
 //*************************************************************************************************
 
 #define PRELOAD_TIMER0 254
+#define SELF_DELAY
 
 //************************************************************************************************
 //*** Structs ***
@@ -89,8 +90,8 @@ void roboter_init(void);
 
 #ifdef SELF_DELAY
 
-void _delay_ms(long int _ms);
-void _delay_us(long int __us);
+void paus_ms(long int _ms);
+void paus_us(long int __us);
 
 #endif
 

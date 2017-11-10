@@ -18,14 +18,19 @@
 
 #define STATE_MOTOR_RIGHT			1
 #define STATE_MOTOR_LEFT			2
-#define STATE_BLINKER_RIGHT			3
-#define STATE_BLINKER_LEFT			4
-#define STATE_EMERGGENCY_FLASHER	5
-#define STATE_HORN					6  
+
+#define STATE_BLINKER_RIGHT_ON		3
+#define STATE_BLINKER_LEFT_ON		4
+
+#define STATE_BLINKER_RIGHT_OFF		5
+#define STATE_BLINKER_LEFT_OFF		6
+
+#define STATE_EMERGGENCY_FLASHER	7
+#define STATE_HORN					8  
 
 
 
-unsigned char bReceive = 0;
+volatile unsigned char bReceive = 0;
 volatile unsigned char akkuLevel, newAkkuLevel, firstCheck;
 
 
@@ -93,16 +98,24 @@ int main(void)
 		{
 			case STATE_MOTOR_RIGHT:					drive(MOTR, ((bReceive & MASK_PWM) + 62));
 													bReceive = 0;
+													state = 0;
 													break;
 										
 			case STATE_MOTOR_LEFT:					drive(MOTL, ((bReceive & MASK_PWM) + 62));
 													bReceive = 0;
+													state = 0;
 													break;
 										
-			case STATE_BLINKER_RIGHT:	
+			case STATE_BLINKER_RIGHT_ON:				
 													break;
 										
-			case STATE_BLINKER_LEFT:	
+			case STATE_BLINKER_LEFT_ON:	
+													break;
+													
+			case STATE_BLINKER_RIGHT_OFF:
+													break;
+													
+			case STATE_BLINKER_LEFT_OFF:
 													break;
 										
 			case STATE_EMERGGENCY_FLASHER:			
@@ -115,7 +128,7 @@ int main(void)
 		
 		
 		{
-			union ADC_frame adc;
+			volatile union ADC_frame adc;
 			//adc.input = (0b00000001 << 8) + 0b00000000;					//testing lsb first or msb first
 			adc.input = adc_measure(MEASURE_UB);
 			bprintf(adc.OUTPUT.msb);

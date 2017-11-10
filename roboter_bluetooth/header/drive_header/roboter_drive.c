@@ -10,9 +10,9 @@
 #include <avr/interrupt.h>
 #include "roboter_drive.h"
 
-#ifndef SELF_DELAY
+
 #include <util/delay.h>
-#endif
+
 
 
 #ifdef SELF_DELAY
@@ -28,7 +28,7 @@ void drive(unsigned char select, unsigned char mot_pwm)
 	// MOTOR RECHTS
 	if (select == MOTR)					//Motor rechts
 	{
-		if(mot_pwm = 94)
+		if(mot_pwm == 94)
 		{
 			mot_pwm = 0;
 		}
@@ -40,7 +40,7 @@ void drive(unsigned char select, unsigned char mot_pwm)
 	// MOTOR LINKS
 	if (select == MOTL)				//Motor links
 	{
-		if(mot_pwm = 94)
+		if(mot_pwm == 94)
 		{
 			mot_pwm = 0;
 		}
@@ -161,13 +161,13 @@ void roboter_init(void)
 
 #ifdef SELF_DELAY
 
-void _delay_ms(long int _ms)
+void paus_ms(long int _ms)
 {
 	counter_timer=0;
 	while(counter_timer < ((_ms * 1000) + 1));
 }
 
-void _delay_us(long int _us)
+void paus_us(long int _us)
 {
 	counter_timer=0;
 	while(counter_timer < (_us +1));
