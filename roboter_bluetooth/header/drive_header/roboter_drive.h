@@ -65,7 +65,7 @@
 #define MEASURE_UB		0			//ADC0	PF0
 #define TRUE            1
 #define FALSE           0
-#define ADC_INTERRUPT
+//#define ADC_INTERRUPT
 
 
 //*************************************************************************************************

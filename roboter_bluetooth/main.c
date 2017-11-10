@@ -10,8 +10,8 @@
 #include <avr/io.h>
 #include <string.h>
 #include <avr/interrupt.h>
-#include <stdio.h>
-#include <util/delay.h>
+//#include <stdio.h>
+//#include <util/delay.h>
 
 #include "header/bluetooth_header/roboter_bluetooth.h"
 #include "header/drive_header/roboter_drive.h"
@@ -63,10 +63,12 @@ union ADC_frame
 
 int main(void)
 {	
-	volatile unsigned char state = 0;
-	int x = 0;
-	
 	JTAG_DISABLE();
+	
+	volatile unsigned char state = 0;
+	//int x = 0;
+	
+	
     /************************************/
     /* I2C - IO - Expander				*/
     /************************************/
@@ -75,7 +77,9 @@ int main(void)
     PORTC |= IO_RESET;					//Portexpander ein
 
     TWBR = 12;							//TWBR=12, TWPS=0 im Reg. TWSR per default, damit f_SCL = 400 kHz
-    
+    //_________________________________________________________________________________________
+	
+	
     roboter_init();
 	bluetooth_init();
 	I2C_init();							//I2C Initialisierung
@@ -83,11 +87,15 @@ int main(void)
 	timer_beeper_init();
 	timer_init_1();
 	
+#ifdef ADC_INTERRUPT
+	adc_init();
+#endif
+
 	drive(MOTR, 0);
 	drive(MOTL, 0);
 	
 	sei();
-	
+/*	
 	for(x = 0; x < 10; x++)
 	{
 		PORTB ^= (1 << LED_RH) | (1 << LED_RV);
@@ -100,6 +108,7 @@ int main(void)
 	timer_beep_tone(125);
 	_delay_ms(10000);
 	timer_beep_stop();	
+*/
 	
     while (1) 
     {	
@@ -194,7 +203,7 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 	}
 	else if((control_peripherial & BLINKER_RIGHT) == (~BLINKER_RIGHT))
 	{
-		PORTB &= ~((1 << LED_RH) | ~(1 << LED_RV));
+		PORTB &= ~((1 << LED_RH) | (1 << LED_RV));
 	}
 	
 	
@@ -204,7 +213,7 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 	}
 	else if((control_peripherial & BLINKER_LEFT) == (~BLINKER_LEFT))
 	{
-		PORTB &= ~((1 << LED_LH) | ~(1 << LED_LV));
+		PORTB &= ~((1 << LED_LH) | (1 << LED_LV));
 	}
 		
 }

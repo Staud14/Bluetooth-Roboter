@@ -104,10 +104,13 @@ void roboter_init(void)
 	DDRB = DDRB |(1<<DDB0)|(1<<DDB1)|(1<<DDB2)|(1<<DDB3);	//LED Pins
 	//DDRD = DDRD |(1<<DDD2)|(1<<DDD3);						//Duo LED Pins		//Disabled for Bluetooth
 	DDRB |= (1 << LED_GRUEN) | (1 << LED_ROT) | BEEPER;
+	DDRB = 0xff;
+	PORTB = 0;
 
-
+#ifndef ADC_INTERRUPT
 	//Akkuspannung
 	DDRF = DDRF &~(1<<MEASURE_UB);		//ADC0	PF0
+#endif
 
 	//Motoren Pins
 	DDRB = DDRB | (1<<DDB6);			//PWM-Output OC4B für MOTOR_RECHTS
@@ -150,6 +153,9 @@ void roboter_init(void)
 #ifdef ADC_INTERRUPT
 void adc_init(void)
 {
+	akkuLevel = 255;
+	newAkkuLevel = 255;
+	firstCheck = TRUE;	
 
 	ADMUX &= ~(1<<REFS1)&~(1<<REFS0);			//ext. AREF = 5V
 	ADMUX |= (1<<ADLAR);						//linksbündig
