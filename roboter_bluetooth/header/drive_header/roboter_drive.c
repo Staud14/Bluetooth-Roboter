@@ -28,6 +28,11 @@ void drive(unsigned char select, unsigned char mot_pwm)
 	// MOTOR RECHTS
 	if (select == MOTR)					//Motor rechts
 	{
+		if(mot_pwm = 94)
+		{
+			mot_pwm = 0;
+		}
+		
 		OCR4B = mot_pwm;				//rechts PWM
 	}
 	
@@ -35,6 +40,11 @@ void drive(unsigned char select, unsigned char mot_pwm)
 	// MOTOR LINKS
 	if (select == MOTL)				//Motor links
 	{
+		if(mot_pwm = 94)
+		{
+			mot_pwm = 0;
+		}
+		
 		OCR4D = mot_pwm;				//links PWM
 	}
 }
@@ -139,12 +149,13 @@ void roboter_init(void)
 	TIMSK0 |= (1 << TOIE0);
 #endif
 
-	
+/*										//nicht benötigt da interrupt vorhanden
 	akkuzustand();						//ein paar mal messen damit ADC warm läuft
 	akkuzustand();
 	akkuzustand();
 	akkuzustand();
 	akkuzustand();
+*/
 }
 
 
