@@ -103,7 +103,7 @@ void roboter_init(void)
 	//LED Pins
 	DDRB = DDRB |(1<<DDB0)|(1<<DDB1)|(1<<DDB2)|(1<<DDB3);	//LED Pins
 	//DDRD = DDRD |(1<<DDD2)|(1<<DDD3);						//Duo LED Pins		//Disabled for Bluetooth
-	DDRB |= (1 << LED_GRUEN) | (1 << LED_ROT);
+	DDRB |= (1 << LED_GRUEN) | (1 << LED_ROT) | BEEPER;
 
 
 	//Akkuspannung

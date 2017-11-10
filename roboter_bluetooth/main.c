@@ -11,6 +11,7 @@
 #include <string.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
+#include <util/delay.h>
 
 #include "header/bluetooth_header/roboter_bluetooth.h"
 #include "header/drive_header/roboter_drive.h"
@@ -63,6 +64,7 @@ union ADC_frame
 int main(void)
 {	
 	volatile unsigned char state = 0;
+	int x = 0;
 	
 	JTAG_DISABLE();
     /************************************/
@@ -79,14 +81,25 @@ int main(void)
 	I2C_init();							//I2C Initialisierung
 	LCD_init();
 	timer_beeper_init();
+	timer_init_1();
 	
+	drive(MOTR, 0);
+	drive(MOTL, 0);
 	
 	sei();
 	
+	for(x = 0; x < 10; x++)
+	{
+		PORTB ^= (1 << LED_RH) | (1 << LED_RV);
+		PORTB ^= (1 << LED_LH) | (1 << LED_LV) | (1 << LED_ROT) | (1 << LED_GRUEN);
+		_delay_ms(500);	
+	}
+	PORTB &= ~(1 << LED_LH) | ~(1 << LED_LV);
+	PORTB &= ~(1 << LED_RH) | ~(1 << LED_RV) | ~(1 << LED_ROT) | ~(1 << LED_GRUEN);
 	
-	
-	drive(MOTR, 0);
-	drive(MOTL, 0);	
+	timer_beep_tone(125);
+	_delay_ms(10000);
+	timer_beep_stop();	
 	
     while (1) 
     {	
@@ -106,15 +119,17 @@ int main(void)
 		else if((bReceive & MASK_SELECT) == MASK_PERIPHERIAL)
 		{
 			control_peripherial = bReceive;
+			
+			if((bReceive & MASK_PERIPHERIAL_HORN) == MASK_PERIPHERIAL_HORN)
+			{
+				state = STATE_HORN_ON;
+			}
+			else if(((bReceive & MASK_SELECT) == MASK_PERIPHERIAL)		&&		((bReceive & HORN) == 0))
+			{
+				state = STATE_HORN_OFF;
+			}
 		}
-		else if((bReceive & MASK_PERIPHERIAL_HORN) == MASK_PERIPHERIAL_HORN)
-		{
-			state = STATE_HORN_ON;
-		}
-		else if(((bReceive & MASK_PERIPHERIAL) == MASK_PERIPHERIAL)		&&		((bReceive & HORN) == 0))
-		{
-			state = STATE_HORN_OFF;
-		}
+		
 		
 		
 		//State Machine for the different controls
@@ -147,6 +162,8 @@ int main(void)
 			bprintf(adc.OUTPUT.msb);
 		}
 	}
+	
+	akkuzustand();
 }
 
 
@@ -175,7 +192,7 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 	}
 	else if((control_peripherial & BLINKER_RIGHT) == (~BLINKER_RIGHT))
 	{
-		PORTB &= ~(1 << LED_RH) | ~(1 << LED_RV);
+		PORTB &= ~((1 << LED_RH) | ~(1 << LED_RV));
 	}
 	
 	
@@ -185,7 +202,7 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 	}
 	else if((control_peripherial & BLINKER_LEFT) == (~BLINKER_LEFT))
 	{
-		PORTB &= ~(1 << LED_LH) | ~(1 << LED_LV);
+		PORTB &= ~((1 << LED_LH) | ~(1 << LED_LV));
 	}
 		
 }
