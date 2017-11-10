@@ -72,7 +72,7 @@
 //*************************************************************************************************
 
 #define PRELOAD_TIMER0 254
-#define SELF_DELAY
+
 
 //************************************************************************************************
 //*** Structs ***
@@ -88,12 +88,11 @@ unsigned int adc_measure(unsigned char channel);
 void akkuzustand (void);
 void roboter_init(void);
 
-#ifdef SELF_DELAY
+void timer_beeper_init(void);
+void timer_beep_tone(unsigned int frequenz);
+void timer_beep_stop(void);
 
-void paus_ms(long int _ms);
-void paus_us(long int __us);
 
-#endif
 
 /*************************************************************************************************
 ***Function description*****

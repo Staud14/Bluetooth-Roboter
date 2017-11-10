@@ -16,22 +16,33 @@
 #include "header/drive_header/roboter_drive.h"
 #include "header/I2C_header/roboter_I2C.h"
 
-#define STATE_MOTOR_RIGHT			1
-#define STATE_MOTOR_LEFT			2
+//States
+#define STATE_MOTOR_RIGHT				1
+#define STATE_MOTOR_LEFT				2
+#define STATE_HORN_ON					3
+#define STATE_HORN_OFF					4
 
-#define STATE_BLINKER_RIGHT_ON		3
-#define STATE_BLINKER_LEFT_ON		4
+//Defines for Peripherial
+#define MASK_PERIPHERIAL				0xc0
+#define MASK_PERIPHERIAL_HORN			0xc4
 
-#define STATE_BLINKER_RIGHT_OFF		5
-#define STATE_BLINKER_LEFT_OFF		6
-
-#define STATE_EMERGGENCY_FLASHER	7
-#define STATE_HORN					8  
-
+#define BLINKER_RIGHT					(1 << 0)
+#define BLINKER_LEFT					(1 << 1)
+#define HORN							(1 << 2)
 
 
+
+//Defines for 16-Bit Timer1
+#define PRELOAD_TIMER1 49911				//Preload 49911 and Prescaler 64 for 1s
+
+
+//Global Variables
 volatile unsigned char bReceive = 0;
 volatile unsigned char akkuLevel, newAkkuLevel, firstCheck;
+volatile unsigned char control_peripherial = 0;
+
+//Function Prototypes
+void timer_init_1(void);
 
 
 union ADC_frame
@@ -67,6 +78,7 @@ int main(void)
 	bluetooth_init();
 	I2C_init();							//I2C Initialisierung
 	LCD_init();
+	timer_beeper_init();
 	
 	
 	sei();
@@ -91,6 +103,18 @@ int main(void)
 		{
 			state = STATE_MOTOR_LEFT;
 		}
+		else if((bReceive & MASK_SELECT) == MASK_PERIPHERIAL)
+		{
+			control_peripherial = bReceive;
+		}
+		else if((bReceive & MASK_PERIPHERIAL_HORN) == MASK_PERIPHERIAL_HORN)
+		{
+			state = STATE_HORN_ON;
+		}
+		else if(((bReceive & MASK_PERIPHERIAL) == MASK_PERIPHERIAL)		&&		((bReceive & HORN) == 0))
+		{
+			state = STATE_HORN_OFF;
+		}
 		
 		
 		//State Machine for the different controls
@@ -105,24 +129,13 @@ int main(void)
 													bReceive = 0;
 													state = 0;
 													break;
-										
-			case STATE_BLINKER_RIGHT_ON:				
-													break;
-										
-			case STATE_BLINKER_LEFT_ON:	
-													break;
 													
-			case STATE_BLINKER_RIGHT_OFF:
+			case STATE_HORN_ON:						timer_beep_tone(200);
 													break;
-													
-			case STATE_BLINKER_LEFT_OFF:
-													break;
-										
-			case STATE_EMERGGENCY_FLASHER:			
-													break;
-													
-			case STATE_HORN:						
-													break;
+												
+			case STATE_HORN_OFF:					timer_beep_stop();
+													break;									
+			
 		}
 		
 		
@@ -137,8 +150,42 @@ int main(void)
 }
 
 
+//Functions
+void timer_init_1(void)
+{
+	TCCR1A = 0x00;													//Standard Timer Mode
+	TCCR1B |= (1<<CS11) | (1<<CS10);								//Prescaler
+	TCNT1 = PRELOAD_TIMER1;											//Preload
+	TIMSK1 = (1 << TOIE1);											//Timer Interrupt enable
+}
+
+//Interrupts Routines
 ISR(USART1_RX_vect)
 {
 	bReceive = UDR1;
 }
 
+ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
+{
+	TCNT1 = PRELOAD_TIMER1;
+	
+	if((control_peripherial & BLINKER_RIGHT) == (BLINKER_RIGHT))
+	{
+		PORTB ^= (1 << LED_RH) | (1 << LED_RV);
+	}
+	else if((control_peripherial & BLINKER_RIGHT) == (~BLINKER_RIGHT))
+	{
+		PORTB &= ~(1 << LED_RH) | ~(1 << LED_RV);
+	}
+	
+	
+	if((control_peripherial & BLINKER_LEFT) == (BLINKER_LEFT))
+	{
+		PORTB ^= (1 << LED_LH) | (1 << LED_LV);
+	}
+	else if((control_peripherial & BLINKER_LEFT) == (~BLINKER_LEFT))
+	{
+		PORTB &= ~(1 << LED_LH) | ~(1 << LED_LV);
+	}
+		
+}
