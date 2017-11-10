@@ -93,7 +93,7 @@ ISR(USART1_RX_vect)
 	bReceive = UDR1;
 }
 
-ISR(ADC_vect)
+/*ISR(ADC_vect)
 {
 	unsigned int wait;
 	unsigned char x, y;
@@ -157,4 +157,4 @@ ISR(ADC_vect)
 	}
 
 
-}
+}*/
