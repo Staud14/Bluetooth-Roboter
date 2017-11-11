@@ -141,7 +141,7 @@ void roboter_init(void)
 	TCCR4B = TCCR4B | (1<<CS40);		//Timer4 Prescaler = 1, Start PWM
 	
 #ifndef ADC_INTERRUPT
-										//nicht benötigt da interrupt vorhanden
+										//nicht benötigt falls interrupt vorhanden
 	akkuzustand();						//ein paar mal messen damit ADC warm läuft
 	akkuzustand();
 	akkuzustand();
