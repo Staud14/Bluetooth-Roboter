@@ -109,6 +109,12 @@ int main(void)
 	_delay_ms(10000);
 	timer_beep_stop();	
 */
+/*
+	PORTB |= (1<<LED_LH) | (1<<LED_LV);
+	_delay_ms(1000);
+	PORTB &= ~(1 << LED_LH)  & ~(1 << LED_LV);
+*/	
+	
 	
     while (1) 
     {	
@@ -199,21 +205,21 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 	
 	if((control_peripherial & BLINKER_RIGHT) == (BLINKER_RIGHT))
 	{
-		PORTB ^= (1 << LED_RH) | (1 << LED_RV);
+		PORTB ^= (1 << LED_RH) ^ (1 << LED_RV);
 	}
 	else if((control_peripherial & BLINKER_RIGHT) == (~BLINKER_RIGHT))
 	{
-		PORTB &= ~((1 << LED_RH) | (1 << LED_RV));
+		PORTB &= ~(1 << LED_RH) & ~(1 << LED_RV);
 	}
 	
 	
 	if((control_peripherial & BLINKER_LEFT) == (BLINKER_LEFT))
 	{
-		PORTB ^= (1 << LED_LH) | (1 << LED_LV);
+		PORTB ^= (1 << LED_LH) ^ (1 << LED_LV);
 	}
 	else if((control_peripherial & BLINKER_LEFT) == (~BLINKER_LEFT))
 	{
-		PORTB &= ~((1 << LED_LH) | (1 << LED_LV));
+		PORTB &= ~(1 << LED_LH)  & ~(1 << LED_LV);
 	}
 		
 }
