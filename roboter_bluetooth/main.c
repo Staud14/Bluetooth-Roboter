@@ -66,6 +66,7 @@ int main(void)
 	JTAG_DISABLE();
 	
 	volatile unsigned char state = 0;
+	volatile union ADC_frame adc;
 	//int x = 0;
 	
 	
@@ -168,14 +169,10 @@ int main(void)
 			
 		}
 		
-		
-		
-		{
-			volatile union ADC_frame adc;
+			
 			//adc.input = (0b00000001 << 8) + 0b00000000;					//testing lsb first or msb first
 			adc.input = adc_measure(MEASURE_UB);
 			bprintf(adc.OUTPUT.msb);
-		}
 	}
 	
 #ifndef ADC_INTERRUPT
