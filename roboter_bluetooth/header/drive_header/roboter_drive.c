@@ -47,6 +47,7 @@ void drive(unsigned char select, unsigned char mot_pwm)
 
 
 
+#ifndef ADC_INTERRUPT
 unsigned int adc_measure(unsigned char channel)
 {
 	unsigned int result=0;
@@ -68,7 +69,6 @@ unsigned int adc_measure(unsigned char channel)
 	return result;
 }
 
-#ifndef ADC_INTERRUPT
 void akkuzustand (void)
 {
 	unsigned int akku;
@@ -141,9 +141,8 @@ void roboter_init(void)
 	TCCR4B = TCCR4B | (1<<CS40);		//Timer4 Prescaler = 1, Start PWM
 	
 #ifndef ADC_INTERRUPT
-										//nicht benötigt falls interrupt vorhanden
+	akkuzustand();						//nicht benötigt falls interrupt vorhanden
 	akkuzustand();						//ein paar mal messen damit ADC warm läuft
-	akkuzustand();
 	akkuzustand();
 	akkuzustand();
 	akkuzustand();

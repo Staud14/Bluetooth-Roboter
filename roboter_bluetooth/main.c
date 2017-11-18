@@ -46,27 +46,12 @@ volatile unsigned char control_peripherial = 0;
 void timer_init_1(void);
 
 
-union ADC_frame
-{
-	unsigned int input;
-	
-	struct output
-	{
-		unsigned char lsb;
-		unsigned char msb;
-	}OUTPUT;
-	
-};
-
-
-
 
 int main(void)
 {	
 	JTAG_DISABLE();
 	
 	volatile unsigned char state = 0;
-	volatile union ADC_frame adc;
 	//int x = 0;
 	
 	
@@ -119,10 +104,6 @@ int main(void)
 	
     while (1) 
     {	
-		
-		//bprintf(bReceive);
-		
-		
 		//Reads the wished state from the received Data		
 		if((bReceive & MASK_SELECT) == MOTR)
 		{
@@ -169,18 +150,23 @@ int main(void)
 			
 		}
 		
-			
-			//adc.input = (0b00000001 << 8) + 0b00000000;					//testing lsb first or msb first
-			adc.input = adc_measure(MEASURE_UB);
-			bprintf(adc.OUTPUT.msb);
+		
 	}
-	
+	sendADC();
 #ifndef ADC_INTERRUPT
 	akkuzustand();
 #endif
 }
 
-
+void sendADC()
+{
+	#ifdef ADC_INTERRUPT
+	int adc_value = adc_measure(MEASURE_UB); //Measuring the Battery Voltage
+	bprintf((char) (adc_value>>2)); //Upper byte
+	#else
+	//TODO
+	#endif
+}
 //Functions
 void timer_init_1(void)
 {
