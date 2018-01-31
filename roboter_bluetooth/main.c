@@ -151,9 +151,9 @@ int main(void)
 		}
 		sendADC();
 		
-		#ifndef ADC_INTERRUPT
+
 		akkuzustand();
-		#endif
+
 	}
 }
 

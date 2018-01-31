@@ -47,7 +47,7 @@ void drive(unsigned char select, unsigned char mot_pwm)
 
 
 
-#ifndef ADC_INTERRUPT
+
 unsigned int adc_measure(unsigned char channel)
 {
 	unsigned int result=0;
@@ -92,7 +92,7 @@ void akkuzustand (void)
 		}
 	}
 }
-#endif
+
 
 void roboter_init(void)
 {	
@@ -107,10 +107,10 @@ void roboter_init(void)
 	DDRB = 0xff;
 	PORTB = 0;
 
-#ifndef ADC_INTERRUPT
+
 	//Akkuspannung
 	DDRF = DDRF &~(1<<MEASURE_UB);		//ADC0	PF0
-#endif
+
 
 	//Motoren Pins
 	DDRB = DDRB | (1<<DDB6);			//PWM-Output OC4B für MOTOR_RECHTS
@@ -140,105 +140,15 @@ void roboter_init(void)
 	TCCR4B = TCCR4B &~(1<<CS41);		//f_CLK_T4 = CLK_IO/Prescaler = 16MHz/256 = 62,5kHz
 	TCCR4B = TCCR4B | (1<<CS40);		//Timer4 Prescaler = 1, Start PWM
 	
-#ifndef ADC_INTERRUPT
+
 	akkuzustand();						//nicht benötigt falls interrupt vorhanden
 	akkuzustand();						//ein paar mal messen damit ADC warm läuft
 	akkuzustand();
 	akkuzustand();
 	akkuzustand();
-#endif
-}
-
-#ifdef ADC_INTERRUPT
-void adc_init(void)
-{
-	akkuLevel = 255;
-	newAkkuLevel = 255;
-	firstCheck = TRUE;	
-
-	ADMUX &= ~(1<<REFS1)&~(1<<REFS0);			//ext. AREF = 5V
-	ADMUX |= (1<<ADLAR);						//linksbündig
-
-	ADCSRB = 0; // freerunning
-	ADCSRB &= ~(1<<MUX5);
-	ADMUX &= ~(1<<MUX4)&~(1<<MUX3);
-	ADMUX &= ~(1<<MUX2)&~(1<<MUX1)&~(1<<MUX0);			//ADC0 single ended Messung Measure UB777
-
-
-
-	ADCSRA |= (1<<ADEN)|(1<<ADATE)|(1<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);	//ADC einschalten, Teiler auf 128 -> 125kHz Samplingfrequenz
-	ADCSRA |= (1<<ADSC);
 
 }
 
-
-
-ISR(ADC_vect)
-{
-	unsigned int wait;
-	unsigned char x, y;
-
-	newAkkuLevel = ADCH;
-	if (akkuLevel > newAkkuLevel)
-	akkuLevel = newAkkuLevel;
-
-	if (firstCheck)
-	{
-		firstCheck = FALSE;
-
-		PORTB |= (1<<LED_LV)|(1<<LED_LH);
-		PORTB |= (1<<LED_RV)|(1<<LED_RH);
-
-
-		if (akkuLevel > 210)
-		{
-			x = (akkuLevel - 200) / 5;
-
-			PORTB &= ~(1 << LED_GRUEN);
-			for (y = 0; y < x; y++)
-			{
-				for(wait = 0; wait < 60000; wait++)  PORTB |=  (1 << LED_GRUEN);
-				for(wait = 0; wait < 60000; wait++)  PORTB &= ~(1 << LED_GRUEN);
-			}
-		}
-		else if (akkuLevel > 205)
-		{
-
-			for(wait = 0; wait < 60000; wait++)
-			{
-				PORTB |= (1 << LED_ROT);
-				PORTB |= (1 << LED_GRUEN);
-			}
-		}
-		else
-		{
-			for(wait = 0; wait < 60000; wait++)  PORTB |= (1 << LED_ROT);
-		}
-		PORTB &= ~(1 << LED_GRUEN);
-		PORTB &= ~(1 << LED_ROT);
-	}
-
-	if (akkuLevel < 200)
-	{
-
-		TCCR4B &= 0xF0;		//alle Motoren stopp, Motor PWM aus
-		PORTB  &= 0x30;		//alle LEDs am Ring aus, Beeper und Motor right aus
-		PORTD  =  0x08;		//Motor left und alle IR-Sender aus
-
-		cli();
-		while(1)
-		{
-			for(wait = 0; wait < 60000; wait++)  PORTB |= (1 << LED_ROT);
-			for(wait = 0; wait < 40000; wait++)  PORTB &= ~(1 << LED_ROT);
-		}
-		PORTB &= ~(1<<LED_LV) & ~(1<<LED_LH);
-		PORTB &= ~(1<<LED_RV) & ~(1<<LED_RH);
-
-	}
-
-
-}
-#endif
 
 void timer_beeper_init(void)
 {
