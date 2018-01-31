@@ -114,9 +114,7 @@ int main(void)
 			state = STATE_MOTOR_LEFT;
 		}
 		else if((bReceive & MASK_SELECT) == MASK_PERIPHERIAL)
-		{
-			control_peripherial = bReceive;
-			
+		{			
 			if((bReceive & MASK_PERIPHERIAL_HORN) == MASK_PERIPHERIAL_HORN)
 			{
 				state = STATE_HORN_ON;
@@ -125,6 +123,8 @@ int main(void)
 			{
 				state = STATE_HORN_OFF;
 			}
+			control_peripherial = bReceive;
+			bReceive = 0x00;
 		}
 		
 		
@@ -189,20 +189,24 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 	if((control_peripherial & BLINKER_RIGHT) == (BLINKER_RIGHT))
 	{
 		PORTB ^= (1 << LED_RH) ^ (1 << LED_RV);
+		control_peripherial = 0x00;
 	}
 	else if((control_peripherial & BLINKER_RIGHT) == (~BLINKER_RIGHT))
 	{
 		PORTB &= ~(1 << LED_RH) & ~(1 << LED_RV);
+		control_peripherial = 0x00;
 	}
 	
 	
 	if((control_peripherial & BLINKER_LEFT) == (BLINKER_LEFT))
 	{
 		PORTB ^= (1 << LED_LH) ^ (1 << LED_LV);
+		control_peripherial = 0x00;
 	}
 	else if((control_peripherial & BLINKER_LEFT) == (~BLINKER_LEFT))
 	{
 		PORTB &= ~(1 << LED_LH)  & ~(1 << LED_LV);
+		control_peripherial = 0x00;
 	}
 		
 }
