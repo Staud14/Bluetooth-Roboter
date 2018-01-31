@@ -81,25 +81,6 @@ int main(void)
 	drive(MOTL, 0);
 	
 	sei();
-/*	
-	for(x = 0; x < 10; x++)
-	{
-		PORTB ^= (1 << LED_RH) | (1 << LED_RV);
-		PORTB ^= (1 << LED_LH) | (1 << LED_LV) | (1 << LED_ROT) | (1 << LED_GRUEN);
-		_delay_ms(500);	
-	}
-	PORTB &= ~(1 << LED_LH) | ~(1 << LED_LV);
-	PORTB &= ~(1 << LED_RH) | ~(1 << LED_RV) | ~(1 << LED_ROT) | ~(1 << LED_GRUEN);
-	
-	timer_beep_tone(125);
-	_delay_ms(10000);
-	timer_beep_stop();	
-*/
-/*
-	PORTB |= (1<<LED_LH) | (1<<LED_LV);
-	_delay_ms(1000);
-	PORTB &= ~(1 << LED_LH)  & ~(1 << LED_LV);
-*/	
 	
 	
     while (1) 
@@ -150,8 +131,6 @@ int main(void)
 			
 		}
 		sendADC();
-		
-
 		akkuzustand();
 
 	}
