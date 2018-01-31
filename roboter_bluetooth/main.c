@@ -44,7 +44,7 @@ volatile unsigned char control_peripherial = 0;
 
 //Function Prototypes
 void timer_init_1(void);
-
+void sendADC(void);
 
 
 int main(void)
@@ -156,6 +156,7 @@ int main(void)
 
 	}
 }
+
 
 void sendADC(void)
 {
