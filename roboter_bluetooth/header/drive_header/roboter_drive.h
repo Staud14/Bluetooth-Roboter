@@ -66,9 +66,9 @@
 #define FALSE           0
 
 //LEVEL1 = 7,6V in ADC Wert
-#define LEVEL1 500
+#define LEVEL1 220
 //LEVEL2 = 6,6V in ADC Wert
-#define LEVEL2 500
+#define LEVEL2 190
 
 
 //*************************************************************************************************

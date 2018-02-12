@@ -12,8 +12,8 @@
 #include <avr/io.h>
 #include <string.h>
 #include <avr/interrupt.h>
-//#include <stdio.h>
-//#include <util/delay.h>
+#include <stdio.h>
+#include <util/delay.h>
 
 #include "header/bluetooth_header/roboter_bluetooth.h"
 #include "header/drive_header/roboter_drive.h"
@@ -41,7 +41,6 @@
 
 //Global Variables
 volatile unsigned char bReceive = 0;
-volatile unsigned char akkuLevel, newAkkuLevel, firstCheck;
 volatile unsigned char control_peripherial = 0;
 
 //Function Prototypes
@@ -79,6 +78,20 @@ int main(void)
 	drive(MOTL, 0);
 	
 	sei();
+	
+//Kalibrierungs Hilfe	
+	unsigned char akku_in;
+	char akku_let[8];
+	
+	while(1)
+	{
+		akku_in = (adc_measure(MEASURE_UB) >> 2 );
+		sprintf(akku_let, "%d",akku_in);
+		LCD_string(akku_let);
+		_delay_ms(2000);
+		LCD_cmd(LCD_CLEAR);
+		akkuzustand();
+	}
 	
 	
     while (1) 

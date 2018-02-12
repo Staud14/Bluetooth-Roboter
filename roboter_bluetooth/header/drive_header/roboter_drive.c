@@ -69,11 +69,13 @@ unsigned int adc_measure(unsigned char channel)
 
 void akkuzustand (void)
 {
-	unsigned int akku;
+	unsigned int akku_in;
 	unsigned char i;
+	unsigned char akku;
 	
-	for (i=0;i<10;i++) {akku = adc_measure(MEASURE_UB);}
-		
+	for (i=0;i<10;i++) {akku_in = adc_measure(MEASURE_UB);}
+	akku = (akku_in >> 2);
+	
 	if (akku > LEVEL1)												//Akku voll,	 8,4 >= Vcc > 7,6V  grün
 	{
 		PORTB |= (1<<LED_GRUEN); 
