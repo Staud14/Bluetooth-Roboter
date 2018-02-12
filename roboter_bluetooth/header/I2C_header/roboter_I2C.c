@@ -2,7 +2,6 @@
  * roboter_I2C.c
  *
  * Created: 21.10.2017 11:05:53
- *  Author: patri
  */ 
 
 #define F_CPU 16000000UL

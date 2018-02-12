@@ -2,7 +2,6 @@
  * roboter_I2C.h
  *
  * Created: 21.10.2017 11:06:05
- *  Author: patri
  */ 
 
 

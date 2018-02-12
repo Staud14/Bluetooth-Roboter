@@ -2,7 +2,6 @@
  * roboter_drive.c
  *
  * Created: 21.10.2017 
- *  Author: Patrik Staudenmayer
  */ 
 #define F_CPU 16000000UL
 
@@ -13,9 +12,6 @@
 
 #include <util/delay.h>
 
-
-
-volatile unsigned char akkuLevel, newAkkuLevel, firstCheck;
 
 
 void drive(unsigned char select, unsigned char mot_pwm)
@@ -52,18 +48,20 @@ unsigned int adc_measure(unsigned char channel)
 {
 	unsigned int result=0;
 
-	ADMUX &= ~(1<<REFS1)&~(1<<REFS0);			//ext. AREF = 5V
-	ADMUX &= ~(1<<ADLAR);						//rechttsbündig
+	ADMUX = 0;			//ext. AREF = 5V  rechttsbündig
+							
 
 	ADCSRB &= ~(1<<MUX5);
+	
 	ADMUX &= ~(1<<MUX4)&~(1<<MUX3);
-	if (channel == 0) {ADMUX &= ~(1<<MUX2)&~(1<<MUX1)&~(1<<MUX0);}			//ADC0 single ended Messung Measure UB
-	if (channel == 1) {ADMUX &= ~(1<<MUX2)&~(1<<MUX1);ADMUX |= (1<<MUX0);}	//ADC1 single ended Messung LF left  (IR Empfänger links)
-	if (channel == 4) {ADMUX |=  (1<<MUX2);ADMUX &= ~(1<<MUX1)&~(1<<MUX0);}	//ADC4 single ended Messung LF right (IR Empfänger rechts)
+	ADMUX |= channel;							//ADC0 single ended Messung Measure UB
+												//ADC1 single ended Messung LF left  (IR Empfänger links)
+												//ADC4 single ended Messung LF right (IR Empfänger rechts)
 
-	ADCSRA |= (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);	//ADC einschalten, Teiler auf 128 -> 125kHz Samplingfrequenz
+	ADCSRA |= (1<<ADEN)|(1<<ADPS2)|(1<<ADPS1);	//ADC einschalten, Teiler auf 128 -> 125kHz Samplingfrequenz
 
 	ADCSRA |= (1<<ADSC);						//start
+	
 	while(ADCSRA&(1<<ADSC));					//warten auf Wandlungsende
 	result = ADCW;
 	return result;
@@ -75,20 +73,30 @@ void akkuzustand (void)
 	unsigned char i;
 	
 	for (i=0;i<10;i++) {akku = adc_measure(MEASURE_UB);}
-	if (akku >822)										//Akku voll,	 7,2V >= Vcc > 6,8V  grün
-	{PORTB|=(1<<LED_GRUEN); PORTB&=~(1<<LED_ROT);}
-	if ((akku<=822)&&(akku>744))						//Akku halbvoll, 6,8V >= Vcc > 6,4V  gelb
-	{PORTB|=(1<<LED_GRUEN); PORTB|=(1<<LED_ROT);}
-	if (akku<=744)										//Akku leer,	 6,4V >= Vcc		 rot +  ENDE
-	{PORTB&=~(1<<LED_GRUEN); PORTB|=(1<<LED_ROT);
-		cli();										//alle Interrupts aus
-		TCCR4B &= 0xF0;							//alle Motoren stopp, Motor PWM aus
-		PORTB  &= 0x30;							//alle LEDs am Ring aus, Beeper und Motor right aus
-		PORTD  =  0x08;							//Motor left und alle IR-Sender aus
+		
+	if (akku > LEVEL1)												//Akku voll,	 8,4 >= Vcc > 7,6V  grün
+	{
+		PORTB |= (1<<LED_GRUEN); 
+		PORTB &= ~(1<<LED_ROT);
+	}
+		
+	else if ( (akku <= LEVEL1) && (akku > LEVEL2) )					//Akku halbvoll, 7,6 >= Vcc > 6,6V  rot
+	{
+		PORTB &= ~(1<<LED_GRUEN); 
+		PORTB|=(1<<LED_ROT);
+	}
+		
+	else if (akku <= LEVEL2)										//Akku leer,	 6,6V >= Vcc		 rot blinkend alle 4 sek +  ENDE
+	{	PORTB &= ~(1<<LED_GRUEN); 
+		PORTB|=(1<<LED_ROT);
+		cli();														//alle Interrupts aus
+		TCCR4B &= 0xF0;												//alle Motoren stopp, Motor PWM aus
+		PORTB  &= 0x30;												//alle LEDs am Ring aus, Beeper und Motor right aus
+		PORTD  =  0x08;												//Motor left und alle IR-Sender aus
 		while(1)
 		{
-			PORTB^=(1<<LED_ROT);				//rote Duo LED blinkt in Endlsschleife = E N D E !!!!
-			_delay_ms(150);
+			PORTB^=(1<<LED_ROT);									//rote Duo LED blinkt in Endlsschleife = E N D E !!!!
+			_delay_ms(4000);
 		}
 	}
 }
@@ -102,14 +110,11 @@ void roboter_init(void)
 
 	//LED Pins
 	DDRB = DDRB |(1<<DDB0)|(1<<DDB1)|(1<<DDB2)|(1<<DDB3);	//LED Pins
-	//DDRD = DDRD |(1<<DDD2)|(1<<DDD3);						//Duo LED Pins		//Disabled for Bluetooth
-	DDRB |= (1 << LED_GRUEN) | (1 << LED_ROT) | BEEPER;
+	
+	//DDRD = DDRD |(1<<DDD2)|(1<<DDD3);						//Disabled for Bluetooth
 	DDRB = 0xff;
 	PORTB = 0;
 
-
-	//Akkuspannung
-	DDRF = DDRF &~(1<<MEASURE_UB);		//ADC0	PF0
 
 
 	//Motoren Pins

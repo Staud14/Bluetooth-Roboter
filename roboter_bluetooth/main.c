@@ -2,10 +2,12 @@
  * roboter_bluetooth.c
  *
  * Created: 21.10.2017 10:45:37
- * Author : patrik
  */ 
 
 #define F_CPU 16000000UL
+
+
+
 
 #include <avr/io.h>
 #include <string.h>
@@ -71,11 +73,7 @@ int main(void)
 	I2C_init();							//I2C Initialisierung
 	LCD_init();
 	timer_beeper_init();
-	timer_init_1();
-	
-#ifdef ADC_INTERRUPT
-	adc_init();
-#endif
+	timer_init_1();	
 
 	drive(MOTR, 0);
 	drive(MOTL, 0);

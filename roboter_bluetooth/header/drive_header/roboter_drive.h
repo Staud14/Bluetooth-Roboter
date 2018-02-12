@@ -2,7 +2,6 @@
  * roboter_drive.h
  *
  * Created: 21.10.2017 
- *  Author: Patrik Staudenmayer
  */ 
 
 
@@ -65,7 +64,11 @@
 #define MEASURE_UB		0			//ADC0	PF0
 #define TRUE            1
 #define FALSE           0
-//#define ADC_INTERRUPT
+
+//LEVEL1 = 7,6V in ADC Wert
+#define LEVEL1 500
+//LEVEL2 = 6,6V in ADC Wert
+#define LEVEL2 500
 
 
 //*************************************************************************************************
@@ -95,13 +98,9 @@ void roboter_init(void);
 void drive(unsigned char select, unsigned char mot_pwm);
 unsigned int adc_measure(unsigned char channel);
 
-#ifdef ADC_INTERRUPT
-void adc_init(void);
-#endif
 
-#ifndef ADC_INTERRUPT
 void akkuzustand (void);
-#endif
+
 
 void timer_beeper_init(void);
 void timer_beep_tone(unsigned int frequenz);
