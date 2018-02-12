@@ -139,12 +139,8 @@ int main(void)
 
 void sendADC(void)
 {
-	//#ifndef ADC_INTERRUPT
-	int adc_value = adc_measure(MEASURE_UB); //Measuring the Battery Voltage
-	bprintf((char) (adc_value>>2)); //Upper byte
-	//#else
-	//TODO
-	//#endif
+	int adc_value = adc_measure(MEASURE_UB);	//Measuring the Battery Voltage
+	bprintf((char) (adc_value>>2));				//Upper byte
 }
 //Functions
 void timer_init_1(void)
