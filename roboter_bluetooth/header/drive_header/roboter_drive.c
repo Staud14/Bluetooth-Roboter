@@ -97,8 +97,10 @@ void akkuzustand (void)
 		PORTD  =  0x08;												//Motor left und alle IR-Sender aus
 		while(1)
 		{
-			PORTB^=(1<<LED_ROT);									//rote Duo LED blinkt in Endlsschleife = E N D E !!!!
-			_delay_ms(4000);
+			PORTB |= (1<<LED_ROT);									//rote Duo LED blinkt in Endlsschleife = E N D E !!!!
+			_delay_ms(400);
+			PORTB &= ~(1<<LED_ROT);
+			_delay_ms(3600);
 		}
 	}
 }

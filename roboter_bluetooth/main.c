@@ -78,7 +78,7 @@ int main(void)
 	drive(MOTL, 0);
 	
 	sei();
-	
+/*	
 //Kalibrierungs Hilfe	
 	unsigned char akku_in;
 	char akku_let[8];
@@ -92,7 +92,7 @@ int main(void)
 		LCD_cmd(LCD_CLEAR);
 		akkuzustand();
 	}
-	
+*/	
 	
     while (1) 
     {	
