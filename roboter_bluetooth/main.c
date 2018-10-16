@@ -73,12 +73,16 @@ int main(void)
 	LCD_init();
 	timer_beeper_init();
 	timer_init_1();	
-
+	
 	drive(MOTR, 0);
 	drive(MOTL, 0);
 	
+	LCD_cmd(LCD_INIT);
+	LCD_cmd(LCD_CLEAR);
+	
+	
 	sei();
-/*	
+/*
 //Kalibrierungs Hilfe	
 	unsigned char akku_in;
 	char akku_let[8];
@@ -92,26 +96,26 @@ int main(void)
 		LCD_cmd(LCD_CLEAR);
 		akkuzustand();
 	}
-*/	
+*/
 	
     while (1) 
     {	
 		//Reads the wished state from the received Data		
-		if((bReceive & MASK_SELECT) == MOTR)
+		if((char)(bReceive & MASK_SELECT) == MOTR)
 		{
 			state = STATE_MOTOR_RIGHT;
 		}
-		else if((bReceive & MASK_SELECT) == MOTL)
+		else if((char)(bReceive & MASK_SELECT) == MOTL)
 		{
 			state = STATE_MOTOR_LEFT;
 		}
-		else if((bReceive & MASK_SELECT) == MASK_PERIPHERIAL)
+		else if((char)(bReceive & MASK_SELECT) == MASK_PERIPHERIAL)
 		{			
-			if((bReceive & MASK_PERIPHERIAL_HORN) == MASK_PERIPHERIAL_HORN)
+			if((char)(bReceive & MASK_PERIPHERIAL_HORN) == MASK_PERIPHERIAL_HORN)
 			{
 				state = STATE_HORN_ON;
 			}
-			else if(((bReceive & MASK_SELECT) == MASK_PERIPHERIAL)		&&		((bReceive & HORN) == 0))
+			else if( (char)(bReceive & HORN) == (char)0 )
 			{
 				state = STATE_HORN_OFF;
 			}
@@ -172,27 +176,27 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 {
 	TCNT1 = PRELOAD_TIMER1;
 	
-	if((control_peripherial & BLINKER_RIGHT) == (BLINKER_RIGHT))
+	if((char)(control_peripherial & (char)BLINKER_RIGHT) == (char)(BLINKER_RIGHT))
 	{
 		PORTB ^= (1 << LED_RH) ^ (1 << LED_RV);
-		control_peripherial = 0x00;
+		//control_peripherial = 0x00;
 	}
-	else if((control_peripherial & BLINKER_RIGHT) == (~BLINKER_RIGHT))
+	else if((char)(control_peripherial & (char)BLINKER_RIGHT) == (char)(~BLINKER_RIGHT))
 	{
 		PORTB &= ~(1 << LED_RH) & ~(1 << LED_RV);
-		control_peripherial = 0x00;
+		//control_peripherial = 0x00;
 	}
 	
 	
-	if((control_peripherial & BLINKER_LEFT) == (BLINKER_LEFT))
+	if((char)((char)control_peripherial & (char)BLINKER_LEFT) == (char)(BLINKER_LEFT))
 	{
 		PORTB ^= (1 << LED_LH) ^ (1 << LED_LV);
-		control_peripherial = 0x00;
+		//control_peripherial = 0x00;
 	}
-	else if((control_peripherial & BLINKER_LEFT) == (~BLINKER_LEFT))
+	else if((char)((char)control_peripherial & (char)BLINKER_LEFT) == (char)(~BLINKER_LEFT))
 	{
 		PORTB &= ~(1 << LED_LH)  & ~(1 << LED_LV);
-		control_peripherial = 0x00;
+		//control_peripherial = 0x00;
 	}
 		
 }
