@@ -181,7 +181,7 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 		PORTB ^= (1 << LED_RH) ^ (1 << LED_RV);
 		//control_peripherial = 0x00;
 	}
-	else if((char)(control_peripherial & (char)BLINKER_RIGHT) == (char)(~BLINKER_RIGHT))
+	else//if((char)(control_peripherial & (char)BLINKER_RIGHT) == (char)(~BLINKER_RIGHT))
 	{
 		PORTB &= ~(1 << LED_RH) & ~(1 << LED_RV);
 		//control_peripherial = 0x00;
@@ -193,7 +193,7 @@ ISR(TIMER1_OVF_vect)												//Interrrupt sub routine timer 1 (16bit Timer)
 		PORTB ^= (1 << LED_LH) ^ (1 << LED_LV);
 		//control_peripherial = 0x00;
 	}
-	else if((char)((char)control_peripherial & (char)BLINKER_LEFT) == (char)(~BLINKER_LEFT))
+	else//if((char)((char)control_peripherial & (char)BLINKER_LEFT) == (char)(~BLINKER_LEFT))
 	{
 		PORTB &= ~(1 << LED_LH)  & ~(1 << LED_LV);
 		//control_peripherial = 0x00;
